@@ -3,7 +3,7 @@ title: Getting started
 date: "2019-03-26"
 description: This is my second post, testing stackedit.io.
 ---
-More to come, stay tuned!
+Second thing I have to figure out is how to actually redeploy it 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTQ2MzAyNDU3Nl19
+eyJoaXN0b3J5IjpbNTgzMzg2MjczXX0=
 -->
