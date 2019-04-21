@@ -1,8 +1,7 @@
 ---
 title: My take on concise promise handling in TypeScript.
 date: "2019-04-21"
-My solution for ugly promise callback hell and async/await try-catch madness.
-tags: typescript, promise, cleancode
+description: "My solution for ugly promise callback hell and async/await try-catch madness."
 ---
 After looking for a clean way to handle async/await REST calls without try-catch blocks, I found a small wrapper that satisfied my needs. 
 
@@ -61,7 +60,7 @@ const [todo, error] = await on<Todo>(somePromise())
 // error typing is optional, it defaults to any.
 ```
 
-I'm posting my solution just to share my point of view. I'm very open to improvements and comments. Would you use such a solution? Let me know. This is also my first article/post. Since I've always wanted to write about stuff I do, I decided such a short topic might be just enough to get my feet wet.
+ This is my first article/post. Since I've always wanted to write about stuff I do, I decided such a short topic might be just enough to get my feet wet.
 
 Cheers!
 <!--stackedit_data:
