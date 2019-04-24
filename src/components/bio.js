@@ -30,9 +30,11 @@ function Bio() {
               }}
             />
             <p>
-              <span role="img" aria-label="wave emoji">👋</span> 
-              Hi, I'm <strong style={{ color: `#FF491F` }}>{author}</strong>. <br/>
-              I code for a living and I'm dying to blog.
+              <span role="img" aria-label="wave emoji">
+                👋
+              </span>
+              Hi, I'm <strong style={{ color: `#FF491F` }}>{author}</strong>.{" "}
+              <br />I code for a living and I'm dying to blog.
             </p>
           </div>
         )

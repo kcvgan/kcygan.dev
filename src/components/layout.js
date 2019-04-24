@@ -63,18 +63,24 @@ class Layout extends React.Component {
         <header>{header}</header>
         <main>{children}</main>
         <footer>
-          <Link
-            style={{ color: `#FF491F` }}
-            to={`/portfolio`}
-          >
+          <Link style={{ color: `#FF491F` }} to={`/portfolio`}>
             Portfolio
           </Link>
           {` | `}
-          <a style={{ color: `#FF491F` }} href="https://www.github.com/kcvgan">GitHub</a>
+          <a style={{ color: `#FF491F` }} href="https://www.github.com/kcvgan">
+            GitHub
+          </a>
           {` | `}
-          <a style={{ color: `#FF491F` }} href="mailto:kcygan54@gmail.com">Email</a>
+          <a style={{ color: `#FF491F` }} href="mailto:kcygan54@gmail.com">
+            Email
+          </a>
           {` | `}
-          <a style={{ color: `#FF491F` }} href="https://www.linkedin.com/in/kacper-cygan-6a7645153">LinkedIn</a>
+          <a
+            style={{ color: `#FF491F` }}
+            href="https://www.linkedin.com/in/kacper-cygan-6a7645153"
+          >
+            LinkedIn
+          </a>
         </footer>
       </div>
     )
