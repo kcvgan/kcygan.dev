@@ -13,7 +13,7 @@ __House of Leaves__ - Mark Z. Danielewski
 
 ## Read
 ### Tech
-__Refactoring UI__ - Adam Wathan & Steve Schoger 👏
+__Refactoring UI__ - Adam Wathan & Steve Schoger 👏  
 __TypeScript Deep Dive__ - Basarat Ali Syed 👏
 
 ### Non-tech
