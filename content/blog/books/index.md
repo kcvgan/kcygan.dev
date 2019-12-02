@@ -14,12 +14,12 @@ __How Not To Die__ - Michael Greger
 ---
 ## Read
 #### Tech 👨‍💻
-__Composing Software__ - Eric Elliot 
+__Composing Software__ - Eric Elliot  
 __Refactoring UI__ - Adam Wathan & Steve Schoger 👏  
 __TypeScript Deep Dive__ - Basarat Ali Syed 👏
 
 #### Non-tech 👨‍🎨
-__Blood Meridian__ - Cormac McCarthy
+__Blood Meridian__ - Cormac McCarthy  
 __Brave New World__ - Aldous Huxley
 
 
