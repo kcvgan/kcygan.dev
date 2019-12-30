@@ -66,7 +66,9 @@ const LandingBio = () => (
           <NameHeader>kacper cygan</NameHeader>
           <Description>frontend dev</Description>
           <Description>
-            👋
+            <span role="img" aria-label="waving hand emoji">
+              👋
+            </span>
             <StyledLink href="mailto:hello@kcygan.dev">
               {" "}
               hello@kcygan.dev{" "}

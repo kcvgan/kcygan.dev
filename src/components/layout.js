@@ -19,16 +19,6 @@ const Content = styled.div`
   padding: 0 1.0875rem 1rem;
   padding-top: 0;
 `
-
-const GatsbyLink = styled.a`
-  margin-left: 5px;
-`
-
-const Footer = styled.footer`
-  display: flex;
-  justify-content: center;
-`
-
 const Layout = ({ children }) => (
   <StaticQuery
     query={graphql`
