@@ -1,6 +1,7 @@
 ---
 title: My take on concise axios promise handling in TypeScript.
 date: '2019-04-21'
+draft: 'false'
 path: /blog/axios-promises
 ---
 After looking for a clean way to handle async/await REST calls without try-catch blocks, I developed a small wrapper that satisfied my needs.

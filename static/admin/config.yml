@@ -14,4 +14,5 @@ collections:
       - { label: "Title", name: "title", widget: "string" }
       - { label: "Publish Date", name: "date", widget: "datetime" }
       - { label: "path", name: "path", widget: "string" }
+      - { label: "Draft", name: "draft", widget: "boolean" , default: false}
       - { name: body, label: Body, widget: markdown }
