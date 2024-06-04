@@ -74,6 +74,9 @@ const LandingBio = () => (
               hello@kcygan.dev{" "}
             </StyledLink>
           </Description>
+          <StyledLink href="https://cal.com/kcygan/30min">  
+              Book a meeting
+          </StyledLink>
         </Container>
       </OuterContainer>
     )}
