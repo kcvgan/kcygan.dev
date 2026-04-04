@@ -1,0 +1,79 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+import readingTime from 'reading-time';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+function formatDate(date: Date) {
+  const day = date.getUTCDate().toString().padStart(2, '0');
+  const month = date.toLocaleDateString('en-US', { month: 'long', timeZone: 'UTC' });
+  const year = date.getUTCFullYear();
+  return `${day} ${month}, ${year}`;
+}
+---
+
+<Layout title="Blog">
+  <div class="content">
+    <h1>Blog</h1>
+    {posts.map(post => {
+      const stats = readingTime(post.body);
+      return (
+        <div class="post">
+          <a href={`/blog/${post.slug}`}>
+            <h3 class="post-title">{post.data.title}</h3>
+            <div class="meta">
+              <span>{formatDate(post.data.date)}</span>
+              <span> — {stats.text}</span>
+            </div>
+            {post.data.description && <p class="excerpt">{post.data.description}</p>}
+          </a>
+        </div>
+      );
+    })}
+  </div>
+</Layout>
+
+<style>
+  .content {
+    margin: 0 auto;
+    max-width: 860px;
+    padding: 1.45rem 1.0875rem;
+  }
+
+  .post {
+    margin-bottom: 2rem;
+  }
+
+  .post a {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+
+  .post-title {
+    display: inline;
+    border-radius: 1em 0 1em 0;
+    background-image: linear-gradient(
+      -100deg,
+      rgba(255, 250, 150, 0.15),
+      rgba(255, 250, 150, 0.8) 100%,
+      rgba(255, 250, 150, 0.25)
+    );
+    margin-bottom: 0.4rem;
+    line-height: 1.4;
+  }
+
+  .meta {
+    color: #606060;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .excerpt {
+    margin-bottom: 0;
+    color: hsla(0, 0%, 0%, 0.7);
+  }
+</style>

@@ -2,7 +2,7 @@
 title: My take on concise axios promise handling in TypeScript.
 date: '2019-04-21'
 draft: false
-path: /blog/axios-promises
+description: A small wrapper for handling async/await REST calls without try-catch blocks.
 ---
 After looking for a clean way to handle async/await REST calls without try-catch blocks, I developed a small wrapper that satisfied my needs.
 
@@ -11,7 +11,7 @@ The article that inspired me was https://blog.grossman.io/how-to-write-async-awa
 ```javascript
 function on (promise) {
     return promise
-      .then(response => [response, null)
+      .then(response => [response, null])
       .catch(error => [null, error])
 }
 
@@ -48,7 +48,7 @@ After doing lots of work on the frontend with React and learning hooks, the simp
 Here it is:
 
 ```typescript
-// using Axios but you can type ypour promises however you'd like
+// using Axios but you can type your promises however you'd like
 const on = <RES, ERR = any>(
   promise: AxiosPromise
 ): Promise<[RES | null, ERR | null]> => {
@@ -69,7 +69,3 @@ const [todo, error] = await on<Todo>(somePromise())
 This is my first article/post. Since I've always wanted to write about stuff I do, I decided such a short topic might be just enough to get my feet wet.
 
 Cheers!
-
-<!--stackedit_data:
-eyJoaXN0b3J5IjpbNTgzMzg2MjczXX0=
--->

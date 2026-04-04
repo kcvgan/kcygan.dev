@@ -1,0 +1,20 @@
+backend:
+  name: github
+  repo: kcvgan/kcygan.dev
+  branch: master
+
+media_folder: "public/images/uploads"
+public_folder: "/images/uploads"
+
+collections:
+  - name: "blog"
+    label: "Blog Post"
+    folder: "src/content/blog"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Publish Date", name: "date", widget: "datetime" }
+      - { label: "Draft", name: "draft", widget: "boolean", default: false }
+      - { label: "Description", name: "description", widget: "string", required: false, hint: "Short summary shown on the blog listing page." }
+      - { label: "Body", name: "body", widget: "markdown" }
