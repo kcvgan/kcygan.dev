@@ -52,7 +52,7 @@ article out of the built site while editing.
 
 - `src/content/blog/` — articles
 - `public/images/writing/` — article images
-- `src/pages/` — the home, writing index, and article template
+- `src/pages/` — the home, about, writing index, and article template
 - `src/styles/global.css` — the small shared design system
 - `public/admin/config.yml` — browser editor fields
 

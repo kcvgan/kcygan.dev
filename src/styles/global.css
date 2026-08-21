@@ -179,10 +179,16 @@ svg {
   }
 
   .site-header nav {
-    gap: 1rem;
+    gap: 0.8rem;
   }
 
   .site-footer .site-shell {
     margin-top: 4rem;
+  }
+}
+
+@media (max-width: 22rem) {
+  .site-name-text {
+    display: none;
   }
 }

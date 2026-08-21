@@ -60,9 +60,12 @@ const pathname = Astro.url.pathname;
             height={72}
             quality={85}
           />
-          Kacper Cygan
+          <span class="site-name-text">Kacper Cygan</span>
         </a>
         <nav aria-label="Primary navigation">
+          <a href="/about" aria-current={pathname === '/about' ? 'page' : undefined}>
+            About
+          </a>
           <a href="/blog" aria-current={pathname.startsWith('/blog') ? 'page' : undefined}>
             Writing
           </a>
