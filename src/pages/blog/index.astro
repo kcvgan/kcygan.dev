@@ -11,14 +11,7 @@ const posts = await getPublishedPosts();
   description="Essays and notes by Kacper Cygan on software, products, and work."
 >
   <div class="writing-page">
-    <header>
-      <p class="eyebrow">Writing</p>
-      <h1>Notes for myself, shared with everyone.</h1>
-      <p>
-        Essays and shorter observations about software, products, and the practice
-        of making things well.
-      </p>
-    </header>
+    <h1>Writing</h1>
 
     {posts.length > 0 ? <PostList posts={posts} /> : <p>No writing yet.</p>}
   </div>
@@ -27,48 +20,22 @@ const posts = await getPublishedPosts();
 <style>
   .writing-page {
     width: min(100% - 3rem, var(--measure));
-    margin: 4.5rem auto 0;
-  }
-
-  header {
-    max-width: 37rem;
-    margin-bottom: 4.25rem;
-  }
-
-  .eyebrow {
-    margin: 0 0 0.9rem;
-    color: var(--accent);
-    font-size: 0.76rem;
-    font-weight: 650;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
+    margin: 4rem auto 0;
   }
 
   h1 {
-    margin: 0;
+    margin: 0 0 2.5rem;
     font-family: var(--font-serif);
-    font-size: clamp(2.4rem, 6vw, 3.7rem);
-    font-weight: 500;
-    letter-spacing: -0.04em;
-    line-height: 1.04;
-    text-wrap: balance;
-  }
-
-  header > p:last-child {
-    margin: 1.35rem 0 0;
-    color: var(--muted);
-    font-size: 1rem;
-    line-height: 1.7;
+    font-size: 2rem;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    line-height: 1.1;
   }
 
   @media (max-width: 36rem) {
     .writing-page {
       width: min(100% - 2.5rem, var(--measure));
-      margin-top: 3.5rem;
-    }
-
-    header {
-      margin-bottom: 3.25rem;
+      margin-top: 3rem;
     }
   }
 </style>
