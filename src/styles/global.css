@@ -76,14 +76,10 @@ svg {
   margin-inline: auto;
 }
 
-.site-header .site-shell,
-.site-footer .site-shell {
+.site-header .site-shell {
   display: flex;
   align-items: center;
   justify-content: space-between;
-}
-
-.site-header .site-shell {
   padding-block: 1.75rem;
 }
 
@@ -129,25 +125,6 @@ svg {
   text-underline-offset: 0.35em;
 }
 
-.site-footer {
-  color: var(--muted);
-  font-size: 0.76rem;
-}
-
-.site-footer .site-shell {
-  margin-top: 5rem;
-  padding-block: 1.5rem 2rem;
-  border-top: 1px solid var(--rule);
-}
-
-.site-footer p {
-  margin: 0;
-}
-
-.site-footer a {
-  color: inherit;
-}
-
 .skip-link {
   position: fixed;
   z-index: 10;
@@ -182,9 +159,6 @@ svg {
     gap: 0.8rem;
   }
 
-  .site-footer .site-shell {
-    margin-top: 4rem;
-  }
 }
 
 @media (max-width: 22rem) {
