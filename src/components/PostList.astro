@@ -1,0 +1,104 @@
+---
+import type { BlogPost } from '../lib/posts';
+import { formatDate } from '../lib/posts';
+
+interface Props {
+  posts: BlogPost[];
+}
+
+const { posts } = Astro.props;
+---
+
+<ol class="post-list">
+  {posts.map((post: BlogPost) => (
+    <li>
+      <a href={`/blog/${post.id}`}>
+        <span class="post-copy">
+          <span class="post-title">{post.data.title}</span>
+          {post.data.description && (
+            <span class="post-description">{post.data.description}</span>
+          )}
+        </span>
+        <time datetime={post.data.date.toISOString()}>
+          {formatDate(post.data.date)}
+        </time>
+      </a>
+    </li>
+  ))}
+</ol>
+
+<style>
+  .post-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  li {
+    margin: 0;
+    border-top: 1px solid var(--rule);
+  }
+
+  a {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 1.5rem;
+    align-items: baseline;
+    padding: 1.35rem 0;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .post-copy {
+    display: grid;
+    gap: 0.25rem;
+  }
+
+  .post-title {
+    font-family: var(--font-serif);
+    font-size: 1.24rem;
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: -0.012em;
+    text-wrap: pretty;
+    transition: color 160ms ease;
+  }
+
+  .post-description {
+    max-width: 36rem;
+    color: var(--muted);
+    font-size: 0.9rem;
+    line-height: 1.55;
+  }
+
+  time {
+    color: var(--muted);
+    font-size: 0.78rem;
+    white-space: nowrap;
+  }
+
+  a:hover .post-title,
+  a:focus-visible .post-title {
+    color: var(--accent);
+  }
+
+  @media (max-width: 36rem) {
+    a {
+      grid-template-columns: 1fr;
+      gap: 0.5rem;
+      padding: 1.2rem 0;
+    }
+
+    time {
+      grid-row: 1;
+      font-size: 0.74rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .post-title {
+      transition: none;
+    }
+  }
+</style>

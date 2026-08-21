@@ -1,79 +1,74 @@
 ---
+import PostList from '../../components/PostList.astro';
 import Layout from '../../layouts/Layout.astro';
-import { getCollection } from 'astro:content';
-import readingTime from 'reading-time';
+import { getPublishedPosts } from '../../lib/posts';
 
-const posts = (await getCollection('blog', ({ data }) => !data.draft))
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
-
-function formatDate(date: Date) {
-  const day = date.getUTCDate().toString().padStart(2, '0');
-  const month = date.toLocaleDateString('en-US', { month: 'long', timeZone: 'UTC' });
-  const year = date.getUTCFullYear();
-  return `${day} ${month}, ${year}`;
-}
+const posts = await getPublishedPosts();
 ---
 
-<Layout title="Blog">
-  <div class="content">
-    <h1>Blog</h1>
-    {posts.map(post => {
-      const stats = readingTime(post.body);
-      return (
-        <div class="post">
-          <a href={`/blog/${post.slug}`}>
-            <h3 class="post-title">{post.data.title}</h3>
-            <div class="meta">
-              <span>{formatDate(post.data.date)}</span>
-              <span> — {stats.text}</span>
-            </div>
-            {post.data.description && <p class="excerpt">{post.data.description}</p>}
-          </a>
-        </div>
-      );
-    })}
+<Layout
+  title="Writing"
+  description="Essays and notes by Kacper Cygan on software, products, and work."
+>
+  <div class="writing-page">
+    <header>
+      <p class="eyebrow">Writing</p>
+      <h1>Notes for myself, shared with everyone.</h1>
+      <p>
+        Essays and shorter observations about software, products, and the practice
+        of making things well.
+      </p>
+    </header>
+
+    {posts.length > 0 ? <PostList posts={posts} /> : <p>No writing yet.</p>}
   </div>
 </Layout>
 
 <style>
-  .content {
-    margin: 0 auto;
-    max-width: 860px;
-    padding: 1.45rem 1.0875rem;
+  .writing-page {
+    width: min(100% - 3rem, var(--measure));
+    margin: 4.5rem auto 0;
   }
 
-  .post {
-    margin-bottom: 2.5rem;
+  header {
+    max-width: 37rem;
+    margin-bottom: 4.25rem;
   }
 
-  .post a {
-    text-decoration: none;
-    color: inherit;
-    display: block;
+  .eyebrow {
+    margin: 0 0 0.9rem;
+    color: var(--accent);
+    font-size: 0.76rem;
+    font-weight: 650;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
   }
 
-  .post-title {
-    display: inline;
-    border-radius: 1em 0 1em 0;
-    background-image: linear-gradient(
-      -100deg,
-      hsla(150, 40%, 75%, 0.15),
-      hsla(150, 40%, 75%, 0.7) 100%,
-      hsla(150, 40%, 75%, 0.25)
-    );
-    margin-bottom: 0.4rem;
-    line-height: 1.4;
+  h1 {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-size: clamp(2.4rem, 6vw, 3.7rem);
+    font-weight: 500;
+    letter-spacing: -0.04em;
+    line-height: 1.04;
+    text-wrap: balance;
   }
 
-  .meta {
-    color: #606060;
-    font-size: 0.9rem;
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
+  header > p:last-child {
+    margin: 1.35rem 0 0;
+    color: var(--muted);
+    font-size: 1rem;
+    line-height: 1.7;
   }
 
-  .excerpt {
-    margin-bottom: 0;
-    color: hsla(0, 0%, 0%, 0.7);
+  @media (max-width: 36rem) {
+    .writing-page {
+      width: min(100% - 2.5rem, var(--measure));
+      margin-top: 3.5rem;
+    }
+
+    header {
+      margin-bottom: 3.25rem;
+    }
   }
 </style>

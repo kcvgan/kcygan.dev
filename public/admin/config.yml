@@ -2,19 +2,29 @@ backend:
   name: github
   repo: kcvgan/kcygan.dev
   branch: master
+  use_graphql: true
 
-media_folder: "public/images/uploads"
-public_folder: "/images/uploads"
+media_folder: "public/images/writing"
+public_folder: "/images/writing"
+
+editor:
+  preview: false
 
 collections:
   - name: "blog"
-    label: "Blog Post"
+    label: "Writing"
+    label_singular: "Article"
     folder: "src/content/blog"
     create: true
     slug: "{{slug}}"
+    extension: "md"
+    format: "frontmatter"
+    summary: "{{title}} — {{date}}"
     fields:
       - { label: "Title", name: "title", widget: "string" }
-      - { label: "Publish Date", name: "date", widget: "datetime" }
-      - { label: "Draft", name: "draft", widget: "boolean", default: false }
-      - { label: "Description", name: "description", widget: "string", required: false, hint: "Short summary shown on the blog listing page." }
-      - { label: "Body", name: "body", widget: "markdown" }
+      - { label: "Description", name: "description", widget: "text", required: false, hint: "One short sentence for the writing index and link previews." }
+      - { label: "Publish date", name: "date", widget: "datetime", date_format: "YYYY-MM-DD", time_format: false, format: "YYYY-MM-DD" }
+      - { label: "Draft", name: "draft", widget: "boolean", default: false, hint: "Turn this on to keep the article private while editing." }
+      - { label: "Cover image", name: "image", widget: "image", required: false, choose_url: false }
+      - { label: "Cover image description", name: "imageAlt", widget: "string", required: false, hint: "Describe the image for people who cannot see it." }
+      - { label: "Article", name: "body", widget: "markdown", hint: "Paste from Notes, then use the toolbar for headings, links, and images." }

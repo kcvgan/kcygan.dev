@@ -1,192 +1,176 @@
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&family=Source+Serif+4:wght@600;700&display=swap');
+:root {
+  color-scheme: light;
+  --paper: #f7f5ef;
+  --paper-deep: #ebe7dc;
+  --ink: #1d1c19;
+  --muted: #6d6960;
+  --rule: #d8d3c7;
+  --accent: #9b3e2d;
+  --font-sans: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  --font-serif: "Iowan Old Style", "Palatino Linotype", "Book Antiqua",
+    Palatino, Georgia, serif;
+  --measure: 43rem;
+  --wide: 56rem;
+}
 
-/* Reset & base */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
 html {
-  font: 112.5%/1.45em georgia, serif;
-  overflow-y: scroll;
+  min-width: 20rem;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 106.25%;
+  font-synthesis: none;
+  line-height: 1.6;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
 }
 
 body {
+  min-height: 100vh;
   margin: 0;
-  font-family: "Nunito", "Avenir", "Helvetica", sans-serif;
-  color: hsla(0, 0%, 0%, 0.8);
-  background-color: #faf9f7;
-  font-weight: normal;
-  word-wrap: break-word;
-  font-kerning: normal;
-  font-feature-settings: "kern", "liga", "clig", "calt";
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-/* Nav */
-header {
-  background: transparent;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
 }
 
-header nav {
-  max-width: 860px;
-  width: 100%;
-  padding: 1rem 1.0875rem;
-  font-size: 1.2rem;
+main {
+  flex: 1;
 }
 
-header nav a {
-  color: black;
-  text-decoration: none;
-  display: inline-block;
-  position: relative;
-  margin-right: 15px;
+::selection {
+  background: #e8c9bc;
+  color: var(--ink);
 }
 
-header nav a::after {
-  content: "";
-  position: absolute;
-  width: 100%;
-  transform: scaleX(0);
-  height: 2px;
-  bottom: 0;
-  left: 0;
-  background-color: rgba(0, 0, 0, 0.8);
-  transform-origin: bottom right;
-  transition: transform 0.4s cubic-bezier(0.86, 0, 0.07, 1);
-}
-
-header nav a:hover::after {
-  transform: scaleX(1);
-  transform-origin: bottom left;
-}
-
-/* Typography */
 a {
-  font-style: normal;
-  color: hsla(0, 0%, 0%, 0.8);
+  color: var(--ink);
+  text-decoration-color: color-mix(in srgb, var(--accent) 65%, transparent);
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.17em;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: "Source Serif 4", georgia, serif;
-  font-weight: 700;
-  line-height: 1.1;
-  margin: 0 0 1.45rem;
-  text-rendering: optimizeLegibility;
-  letter-spacing: -0.02em;
+a:hover {
+  color: var(--accent);
 }
 
-h1 { font-size: 2.25rem; }
-h2 { font-size: 1.62671rem; }
-h3 { font-size: 1.38316rem; }
-
-p {
-  margin: 0 0 1.45rem;
+a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+  border-radius: 1px;
 }
 
-ul, ol {
-  margin: 0 0 1.45rem 1.45rem;
-  list-style-position: outside;
-}
-
-li {
-  margin-bottom: calc(1.45rem / 2);
-}
-
-li > ol, li > ul {
-  margin-left: 1.45rem;
-  margin-top: calc(1.45rem / 2);
-  margin-bottom: calc(1.45rem / 2);
-}
-
-blockquote {
-  margin: 0 0 1.45rem;
-  padding: 0.1rem 1.45rem;
-  border-left: 3px solid hsl(150, 25%, 65%);
-  font-style: italic;
-  color: hsla(0, 0%, 0%, 0.65);
-}
-
-img {
+img,
+svg {
+  display: block;
   max-width: 100%;
-  margin-bottom: 1.45rem;
-  border-style: none;
 }
 
-hr {
-  margin: 0 0 calc(1.45rem - 1px);
-  background: hsla(0, 0%, 0%, 0.12);
-  border: none;
-  height: 1px;
+.site-shell {
+  width: min(100% - 3rem, var(--wide));
+  margin-inline: auto;
 }
 
-b, strong {
-  font-weight: bold;
+.site-header .site-shell,
+.site-footer .site-shell {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
-pre {
-  margin: 0 0 1.45rem;
-  font-size: 0.85rem;
-  line-height: 1.42;
-  border-radius: 6px;
-  border-left: 3px solid hsl(150, 25%, 65%);
-  overflow: auto;
-  word-wrap: normal;
-  padding: 1.2rem 1.45rem;
+.site-header .site-shell {
+  padding-block: 1.75rem;
 }
 
-code {
-  font-family: "SFMono-Regular", Consolas, "Roboto Mono", "Droid Sans Mono",
-    "Liberation Mono", Menlo, Courier, monospace;
-  font-size: 0.85rem;
-  line-height: 1.45rem;
-  background-color: hsla(0, 0%, 0%, 0.04);
-  border-radius: 3px;
-  padding: 0.1em 0.3em;
+.site-name {
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  text-decoration: none;
 }
 
-pre code {
-  background: none;
-  padding: 0;
-  font-size: inherit;
-  line-height: 1.5;
+.site-header nav {
+  display: flex;
+  gap: 1.35rem;
+  font-size: 0.82rem;
 }
 
-/* Shiki code blocks */
-.astro-code {
-  border-radius: 6px;
-  border-left: 3px solid hsl(150, 25%, 65%);
-  padding: 1.2rem 1.45rem;
-  margin-bottom: 1.45rem;
-  overflow-x: auto;
+.site-header nav a {
+  color: var(--muted);
+  text-decoration: none;
 }
 
-/* Tables */
-table {
-  margin-bottom: 1.45rem;
-  font-size: 1rem;
-  border-collapse: collapse;
-  width: 100%;
+.site-header nav a:hover,
+.site-header nav a[aria-current="page"] {
+  color: var(--ink);
 }
 
-th {
-  font-weight: bold;
-  text-align: left;
-  border-bottom: 1px solid hsla(0, 0%, 0%, 0.12);
-  padding: 0.725rem 0.96667rem;
+.site-header nav a[aria-current="page"] {
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-underline-offset: 0.35em;
 }
 
-td {
-  text-align: left;
-  border-bottom: 1px solid hsla(0, 0%, 0%, 0.12);
-  padding: 0.725rem 0.96667rem;
+.site-footer {
+  color: var(--muted);
+  font-size: 0.76rem;
 }
 
-th:first-child, td:first-child { padding-left: 0; }
-th:last-child, td:last-child { padding-right: 0; }
+.site-footer .site-shell {
+  margin-top: 5rem;
+  padding-block: 1.5rem 2rem;
+  border-top: 1px solid var(--rule);
+}
 
-@media only screen and (max-width: 480px) {
-  html { font-size: 100%; }
+.site-footer p {
+  margin: 0;
+}
+
+.site-footer a {
+  color: inherit;
+}
+
+.skip-link {
+  position: fixed;
+  z-index: 10;
+  top: 0.75rem;
+  left: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 0.8rem;
+  transform: translateY(-200%);
+}
+
+.skip-link:focus {
+  color: var(--paper);
+  transform: translateY(0);
+}
+
+@media (max-width: 36rem) {
+  html {
+    font-size: 100%;
+  }
+
+  .site-shell {
+    width: min(100% - 2.5rem, var(--wide));
+  }
+
+  .site-header .site-shell {
+    padding-block: 1.25rem;
+  }
+
+  .site-header nav {
+    gap: 1rem;
+  }
+
+  .site-footer .site-shell {
+    margin-top: 4rem;
+  }
 }
