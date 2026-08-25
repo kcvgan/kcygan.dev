@@ -19,7 +19,7 @@ collections:
     slug: "{{slug}}"
     extension: "md"
     format: "frontmatter"
-    summary: "{{title}} — {{date}}"
+    summary: "{{title}} · {{date}}"
     fields:
       - { label: "Title", name: "title", widget: "string" }
       - { label: "Description", name: "description", widget: "text", required: false, hint: "One short sentence for the writing index and link previews." }
