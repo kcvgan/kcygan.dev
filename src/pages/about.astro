@@ -1,12 +1,13 @@
 ---
 import { Image } from 'astro:assets';
 import avatar from '../images/avatar.jpg';
+import AshbyLink from '../components/AshbyLink.astro';
 import Layout from '../layouts/Layout.astro';
 ---
 
 <Layout
   title="About"
-  description="About Kacper Cygan, a software developer interested in useful products and thoughtful interfaces."
+  description="About Kacper Cygan, a product engineer at Ashby who publishes fiction and nonfiction."
 >
   <div class="about-page">
     <h1>About</h1>
@@ -23,17 +24,15 @@ import Layout from '../layouts/Layout.astro';
 
       <div class="prose">
         <p>
-          I’m Kacper, a software developer interested in useful products,
-          thoughtful interfaces, and doing good work.
+          I’m Kacper, a product engineer at <AshbyLink />. I’m interested in useful
+          products, thoughtful interfaces, and doing good work.
         </p>
         <p>
-          This site is where I keep occasional notes about software, products,
-          and things I learn while making them.
+          I like to write about different things. This site is where I publish notes
+          about software, products, and things I learn, along with fiction and nonfiction.
         </p>
         <p class="links">
           <a href="mailto:hello@kcygan.dev">Email me</a>
-          <span aria-hidden="true">·</span>
-          <a href="https://cal.com/kcygan/30min">Book a conversation</a>
           <span aria-hidden="true">·</span>
           <a href="https://github.com/kcvgan" rel="me">GitHub</a>
         </p>

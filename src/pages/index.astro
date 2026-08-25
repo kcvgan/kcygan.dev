@@ -1,4 +1,5 @@
 ---
+import AshbyLink from '../components/AshbyLink.astro';
 import PostList from '../components/PostList.astro';
 import Layout from '../layouts/Layout.astro';
 import { getPublishedPosts } from '../lib/posts';
@@ -8,19 +9,19 @@ const posts = (await getPublishedPosts()).slice(0, 5);
 
 <Layout
   title="Home"
-  description="Kacper Cygan is a software developer who writes about technology, products, and work."
+  description="Kacper Cygan is a product engineer at Ashby who publishes fiction, nonfiction, and writing about software and products."
 >
   <div class="home">
     <section class="intro" aria-labelledby="intro-title">
-      <h1 id="intro-title">I build software and write occasionally.</h1>
+      <h1 id="intro-title">
+        I’m a product engineer <span class="employment">at <AshbyLink /></span>.
+      </h1>
       <p class="lede">
-        I’m a software developer interested in useful products, thoughtful interfaces,
-        and doing good work.
+        I like to write about different things—software, products, work, and whatever
+        else catches my attention. I publish both fiction and nonfiction here.
       </p>
       <p class="elsewhere">
         <a href="mailto:hello@kcygan.dev">Email me</a>
-        <span aria-hidden="true">·</span>
-        <a href="https://cal.com/kcygan/30min">Book a conversation</a>
       </p>
     </section>
 
@@ -57,6 +58,10 @@ const posts = (await getPublishedPosts()).slice(0, 5);
     letter-spacing: -0.03em;
     line-height: 1.08;
     text-wrap: balance;
+  }
+
+  .employment {
+    white-space: nowrap;
   }
 
   .lede {
