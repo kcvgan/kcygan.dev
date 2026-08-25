@@ -9,13 +9,13 @@ const posts = await getPublishedPosts();
 
 <Layout
   title="Home"
-  description="Kacper Cygan is a product engineer at Ashby who publishes fiction, nonfiction, and writing about software and products."
+  description="The personal website and writing archive of Kacper Cygan, a product engineer at Ashby."
 >
   <div class="home">
     <section class="writing" aria-labelledby="writing-title">
       <header class="writing-header">
         <h1 id="writing-title">Writing</h1>
-        <p>Fiction, nonfiction, and notes about software, products, work, and other things.</p>
+        <p>Things I wanted to put into words.</p>
       </header>
       {posts.length > 0 ? (
         <PostList posts={posts} />
