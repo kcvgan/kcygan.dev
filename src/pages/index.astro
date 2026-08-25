@@ -13,12 +13,11 @@ const posts = (await getPublishedPosts()).slice(0, 5);
 >
   <div class="home">
     <section class="intro" aria-labelledby="intro-title">
-      <h1 id="intro-title">
-        I’m a product engineer <span class="employment">at <AshbyLink /></span>.
-      </h1>
+      <h1 id="intro-title">I build products and write.</h1>
       <p class="lede">
-        I like to write about different things—software, products, work, and whatever
-        else catches my attention. I publish both fiction and nonfiction here.
+        I’m a product engineer at <AshbyLink />. I like to write about different
+        things—software, products, work, and whatever else catches my attention. I
+        publish fiction and nonfiction here.
       </p>
       <p class="elsewhere">
         <a href="mailto:hello@kcygan.dev">Email me</a>
@@ -58,10 +57,6 @@ const posts = (await getPublishedPosts()).slice(0, 5);
     letter-spacing: -0.03em;
     line-height: 1.08;
     text-wrap: balance;
-  }
-
-  .employment {
-    white-space: nowrap;
   }
 
   .lede {
