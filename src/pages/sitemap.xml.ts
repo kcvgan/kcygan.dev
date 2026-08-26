@@ -4,7 +4,7 @@ import { getPublishedPosts } from '../lib/posts';
 export const GET: APIRoute = async ({ site }) => {
   const baseURL = site ?? new URL('https://kcygan.dev');
   const posts = await getPublishedPosts();
-  const paths = ['/', '/about', '/blog', ...posts.map((post) => `/blog/${post.id}`)];
+  const paths = ['/', '/about', '/blog', '/books', ...posts.map((post) => `/blog/${post.id}`)];
   const urls = paths
     .map((path) => `<url><loc>${new URL(path, baseURL).href}</loc></url>`)
     .join('');
