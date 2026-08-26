@@ -674,6 +674,9 @@ const groups = groupNames.map((name) => ({
   .book-dialog.is-visible::backdrop {
     background: rgb(17 17 15 / 0.5);
     backdrop-filter: blur(8px);
+    transition:
+      background 240ms ease,
+      backdrop-filter 300ms cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .book-dialog.is-measuring::backdrop {
@@ -751,21 +754,23 @@ const groups = groupNames.map((name) => ({
     top: 50%;
     left: 50%;
     width: clamp(15rem, 22.5vw, 18rem);
-    opacity: 0.88;
-    filter: blur(3px);
+    opacity: 1;
+    filter: blur(0);
     transform: translate(-50%, -50%) translate(var(--cover-from-x, 0), var(--cover-from-y, 0))
       scale(var(--cover-from-scale-x, 0.86), var(--cover-from-scale-y, 0.86));
     transform-origin: center;
     transition:
-      opacity 190ms ease,
-      filter 230ms ease,
-      transform 240ms cubic-bezier(0.2, 0.82, 0.2, 1);
+      filter 180ms ease,
+      transform 220ms cubic-bezier(0.2, 0.82, 0.2, 1);
   }
 
   .book-dialog.is-visible .dialog-cover-wrap {
     opacity: 1;
     filter: blur(0);
     transform: translate(-50%, -50%) scale(1);
+    transition:
+      filter 260ms ease,
+      transform 350ms cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .book-dialog.is-measuring .dialog-cover-wrap {
@@ -795,13 +800,16 @@ const groups = groupNames.map((name) => ({
     opacity: 0;
     transform: translateY(-50%) translateX(0.8rem);
     transition:
-      opacity 150ms ease 60ms,
-      transform 190ms cubic-bezier(0.2, 0.8, 0.2, 1) 45ms;
+      opacity 120ms ease,
+      transform 160ms cubic-bezier(0.2, 0.8, 0.2, 1);
   }
 
   .book-dialog.is-visible .dialog-copy {
     opacity: 1;
     transform: translateY(-50%) translateX(0);
+    transition:
+      opacity 190ms ease 110ms,
+      transform 230ms cubic-bezier(0.16, 1, 0.3, 1) 85ms;
   }
 
   .book-dialog.is-measuring .dialog-copy,
