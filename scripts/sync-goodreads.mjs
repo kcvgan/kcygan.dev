@@ -3,10 +3,13 @@ import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const GOODREADS_USER_ID = '32242336';
-const SHELF = 'read';
 const PAGE_SIZE = 100;
 const projectRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const outputPath = resolve(projectRoot, 'src/data/books.json');
+const dataDirectory = resolve(projectRoot, 'src/data');
+const shelves = [
+  { name: 'read', output: 'books.json' },
+  { name: 'currently-reading', output: 'currently-reading.json' },
+];
 
 function decodeEntities(value = '') {
   return value
@@ -57,9 +60,9 @@ function parseBook(item) {
   };
 }
 
-async function fetchPage(page) {
+async function fetchPage(shelf, page) {
   const url = new URL(`https://www.goodreads.com/review/list_rss/${GOODREADS_USER_ID}`);
-  url.searchParams.set('shelf', SHELF);
+  url.searchParams.set('shelf', shelf);
   url.searchParams.set('page', String(page));
 
   const response = await fetch(url, {
@@ -67,29 +70,36 @@ async function fetchPage(page) {
   });
 
   if (!response.ok) {
-    throw new Error(`Goodreads returned ${response.status} for page ${page}.`);
+    throw new Error(`Goodreads returned ${response.status} for ${shelf}, page ${page}.`);
   }
 
   const xml = await response.text();
   return [...xml.matchAll(/<item>([\s\S]*?)<\/item>/g)].map((match) => parseBook(match[1]));
 }
 
-const books = [];
+async function syncShelf({ name, output }) {
+  const books = [];
 
-for (let page = 1; ; page += 1) {
-  const pageBooks = await fetchPage(page);
-  books.push(...pageBooks);
+  for (let page = 1; ; page += 1) {
+    const pageBooks = await fetchPage(name, page);
+    books.push(...pageBooks);
 
-  if (pageBooks.length < PAGE_SIZE) break;
+    if (pageBooks.length < PAGE_SIZE) break;
+  }
+
+  const uniqueBooks = [...new Map(books.map((book) => [book.id, book])).values()].sort((a, b) => {
+    const aDate = a.dateRead ?? a.dateAdded ?? '';
+    const bDate = b.dateRead ?? b.dateAdded ?? '';
+    return bDate.localeCompare(aDate) || a.title.localeCompare(b.title);
+  });
+  const outputPath = resolve(dataDirectory, output);
+
+  await mkdir(dirname(outputPath), { recursive: true });
+  await writeFile(outputPath, `${JSON.stringify(uniqueBooks, null, 2)}\n`);
+
+  console.log(`Synced ${uniqueBooks.length} books from Goodreads shelf "${name}".`);
 }
 
-const uniqueBooks = [...new Map(books.map((book) => [book.id, book])).values()].sort((a, b) => {
-  const aDate = a.dateRead ?? a.dateAdded ?? '';
-  const bDate = b.dateRead ?? b.dateAdded ?? '';
-  return bDate.localeCompare(aDate) || a.title.localeCompare(b.title);
-});
-
-await mkdir(dirname(outputPath), { recursive: true });
-await writeFile(outputPath, `${JSON.stringify(uniqueBooks, null, 2)}\n`);
-
-console.log(`Synced ${uniqueBooks.length} books from Goodreads.`);
+for (const shelf of shelves) {
+  await syncShelf(shelf);
+}

@@ -1,5 +1,6 @@
 ---
 import booksData from '../data/books.json';
+import currentlyReadingData from '../data/currently-reading.json';
 import Layout from '../layouts/Layout.astro';
 
 interface Book {
@@ -17,6 +18,7 @@ interface Book {
 }
 
 const books = booksData as Book[];
+const currentlyReading = currentlyReadingData as Book[];
 const recentYearCutoff = 2020;
 const groupFor = (book: Book) =>
   book.yearRead && Number(book.yearRead) >= recentYearCutoff ? book.yearRead : 'Earlier';
@@ -29,6 +31,12 @@ const groups = groupNames.map((name) => ({
   name,
   books: books.filter((book) => groupFor(book) === name),
 }));
+const shelfGroups = [
+  ...(currentlyReading.length > 0
+    ? [{ name: 'Currently reading', books: currentlyReading, current: true }]
+    : []),
+  ...groups.map((group) => ({ ...group, current: false })),
+];
 ---
 
 <Layout
@@ -41,15 +49,6 @@ const groups = groupNames.map((name) => ({
     </header>
 
     <div class="bookshelf-tools">
-      <label class="book-search">
-        <span class="visually-hidden">Find a title or author</span>
-        <svg viewBox="0 0 20 20" aria-hidden="true">
-          <circle cx="8.5" cy="8.5" r="5.75"></circle>
-          <path d="m13 13 4 4"></path>
-        </svg>
-        <input type="search" placeholder="Find a title or author" autocomplete="off" data-book-search />
-      </label>
-
       <div class="year-filters" aria-label="Filter books by year">
         <button type="button" aria-pressed="true" data-year-filter="all">All</button>
         {groupNames.map((name) => (
@@ -59,8 +58,12 @@ const groups = groupNames.map((name) => ({
     </div>
 
     <div class="shelf-collection">
-      {groups.map((group) => (
-        <section class="year-shelf" data-year-section={group.name}>
+      {shelfGroups.map((group) => (
+        <section
+          class:list={{ 'year-shelf': true, 'current-shelf': group.current }}
+          data-year-section={group.name}
+          data-current-section={group.current ? 'true' : undefined}
+        >
           <header class="year-heading">
             <h2>{group.name}</h2>
             <span data-year-count>{group.books.length}</span>
@@ -72,7 +75,7 @@ const groups = groupNames.map((name) => ({
                 class="book-slot"
                 data-book-slot
                 data-year={group.name}
-                data-search={`${book.title} ${book.author}`}
+                data-current={group.current ? 'true' : undefined}
               >
                 <a
                   class="book-card"
@@ -85,6 +88,7 @@ const groups = groupNames.map((name) => ({
                   data-url={book.url}
                   data-rating={book.rating ?? ''}
                   data-date-read={book.dateRead ?? ''}
+                  data-current-reading={group.current ? 'true' : undefined}
                 >
                   <span class="book-jacket">
                     <img
@@ -162,7 +166,6 @@ const groups = groupNames.map((name) => ({
   const bookshelf = document.querySelector('[data-bookshelf]');
 
   if (bookshelf) {
-    const search = bookshelf.querySelector<HTMLInputElement>('[data-book-search]');
     const filters = [...bookshelf.querySelectorAll<HTMLButtonElement>('[data-year-filter]')];
     const slots = [...bookshelf.querySelectorAll<HTMLElement>('[data-book-slot]')];
     const sections = [...bookshelf.querySelectorAll<HTMLElement>('[data-year-section]')];
@@ -179,13 +182,12 @@ const groups = groupNames.map((name) => ({
     let activeSourceCard: HTMLAnchorElement | undefined;
 
     const applyFilters = () => {
-      const query = search?.value.trim().toLocaleLowerCase() ?? '';
       let count = 0;
 
       for (const slot of slots) {
-        const matchesYear = activeYear === 'all' || slot.dataset.year === activeYear;
-        const matchesSearch = !query || slot.dataset.search?.toLocaleLowerCase().includes(query);
-        slot.hidden = !(matchesYear && matchesSearch);
+        const matchesYear =
+          slot.dataset.current === 'true' || activeYear === 'all' || slot.dataset.year === activeYear;
+        slot.hidden = !matchesYear;
         if (!slot.hidden) count += 1;
       }
 
@@ -200,8 +202,6 @@ const groups = groupNames.map((name) => ({
 
       if (noResults) noResults.hidden = count !== 0;
     };
-
-    search?.addEventListener('input', applyFilters);
 
     for (const filter of filters) {
       filter.addEventListener('click', () => {
@@ -242,7 +242,12 @@ const groups = groupNames.map((name) => ({
       }
       if (title) title.textContent = card.dataset.title ?? '';
       if (author) author.textContent = card.dataset.author ?? '';
-      if (read) read.textContent = formatReadDate(card.dataset.dateRead ?? '');
+      if (read) {
+        read.textContent =
+          card.dataset.currentReading === 'true'
+            ? 'Currently reading'
+            : formatReadDate(card.dataset.dateRead ?? '');
+      }
       if (link) link.href = card.dataset.url ?? card.href;
 
       const bookRating = Number(card.dataset.rating);
@@ -449,55 +454,13 @@ const groups = groupNames.map((name) => ({
   .bookshelf-tools {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 1.5rem;
+    justify-content: flex-end;
     margin-top: 1.5rem;
-  }
-
-  .book-search {
-    display: flex;
-    flex: 0 1 18rem;
-    align-items: center;
-    gap: 0.55rem;
-    padding: 0.45rem 0.65rem;
-    border: 1px solid var(--rule);
-    border-radius: 0.35rem;
-    background: color-mix(in srgb, var(--paper) 72%, white);
-  }
-
-  .book-search:focus-within {
-    border-color: var(--muted);
-    outline: 1px solid var(--muted);
-    outline-offset: 2px;
-  }
-
-  .book-search svg {
-    flex: 0 0 auto;
-    width: 0.9rem;
-    fill: none;
-    stroke: var(--muted);
-    stroke-linecap: round;
-    stroke-width: 1.5;
-  }
-
-  .book-search input {
-    width: 100%;
-    padding: 0;
-    border: 0;
-    outline: 0;
-    background: transparent;
-    color: var(--ink);
-    font: inherit;
-    font-size: 0.78rem;
-  }
-
-  .book-search input::placeholder {
-    color: var(--muted);
-    opacity: 0.85;
   }
 
   .year-filters {
     display: flex;
+    min-width: 0;
     gap: 0.9rem;
     overflow-x: auto;
     padding-block: 0.25rem;
@@ -542,6 +505,10 @@ const groups = groupNames.map((name) => ({
 
   .year-shelf {
     margin-bottom: 4.5rem;
+  }
+
+  .current-shelf {
+    margin-bottom: 5.25rem;
   }
 
   .year-heading {
@@ -997,33 +964,17 @@ const groups = groupNames.map((name) => ({
     text-decoration-color: rgb(255 255 255 / 0.45);
   }
 
-  .visually-hidden {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border: 0;
-  }
-
   @media (max-width: 43rem) {
     .book-grid {
       grid-template-columns: repeat(4, minmax(0, 1fr));
     }
 
     .bookshelf-tools {
-      align-items: stretch;
-      flex-direction: column;
-      gap: 0.8rem;
-    }
-
-    .book-search {
-      flex-basis: auto;
+      justify-content: flex-start;
     }
 
     .year-filters {
+      width: 100%;
       margin-inline: -0.2rem;
       padding: 0.25rem 0.2rem 0.45rem;
     }

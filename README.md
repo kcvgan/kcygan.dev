@@ -48,6 +48,15 @@ Paste the article here. Regular Markdown works.
 Put images in `public/images/writing/my-article/`. Set `draft: true` to keep an
 article out of the built site while editing.
 
+## Sync the Reading page
+
+```sh
+npm run sync:books
+```
+
+This updates both the read archive and the **Currently reading** section from
+Kacper's public Goodreads shelves.
+
 ## Project map
 
 - `src/content/blog/`: articles
