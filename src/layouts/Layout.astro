@@ -30,7 +30,8 @@ const pathname = Astro.url.pathname;
     <meta name="author" content="Kacper Cygan" />
     <meta name="theme-color" content="#f7f5ef" />
     <link rel="canonical" href={canonicalURL} />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.jpg" type="image/jpeg" sizes="256x256" />
+    <link rel="apple-touch-icon" href="/favicon.jpg" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Kacper Cygan" />
     <meta property="og:title" content={pageTitle} />
@@ -58,7 +59,6 @@ const pathname = Astro.url.pathname;
           <a href="/blog" aria-current={pathname.startsWith('/blog') ? 'page' : undefined}>
             Writing
           </a>
-          <a href="https://github.com/kcvgan" rel="me">GitHub</a>
         </nav>
       </div>
     </header>

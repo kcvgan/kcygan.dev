@@ -1,5 +1,4 @@
 ---
-import AshbyLink from '../components/AshbyLink.astro';
 import PostList from '../components/PostList.astro';
 import Layout from '../layouts/Layout.astro';
 import { getPublishedPosts } from '../lib/posts';
@@ -13,10 +12,7 @@ const posts = await getPublishedPosts();
 >
   <div class="home">
     <section class="writing" aria-labelledby="writing-title">
-      <header class="writing-header">
-        <h1 id="writing-title">Writing</h1>
-        <p>Things I wanted to put into words.</p>
-      </header>
+      <h1 id="writing-title">Writing</h1>
       {posts.length > 0 ? (
         <PostList posts={posts} />
       ) : (
@@ -24,20 +20,6 @@ const posts = await getPublishedPosts();
       )}
     </section>
 
-    <details class="about-note">
-      <summary>About this site</summary>
-      <div class="about-note-content">
-        <p>
-          I’m a product engineer at <AshbyLink />. My opinions and thoughts are my own,
-          you have been warned.
-        </p>
-        <p class="about-links">
-          <a href="/about">More about me</a>
-          <span aria-hidden="true">·</span>
-          <a href="mailto:hello@kcygan.dev">Email me</a>
-        </p>
-      </div>
-    </details>
   </div>
 </Layout>
 
@@ -48,7 +30,7 @@ const posts = await getPublishedPosts();
   }
 
   h1 {
-    margin: 0;
+    margin: 0 0 2.5rem;
     font-family: var(--font-serif);
     font-size: 2rem;
     font-weight: 600;
@@ -56,51 +38,10 @@ const posts = await getPublishedPosts();
     line-height: 1.1;
   }
 
-  .writing-header p {
-    max-width: 35rem;
-    margin: 0.75rem 0 2.5rem;
-    color: var(--muted);
-    font-size: 0.95rem;
-  }
-
   .empty {
     padding-block: 1.25rem;
     border-block: 1px solid var(--rule);
     color: var(--muted);
-  }
-
-  .about-note {
-    margin-top: 4rem;
-    padding-top: 1.1rem;
-    border-top: 1px solid var(--rule);
-    color: var(--muted);
-    font-size: 0.82rem;
-  }
-
-  .about-note summary {
-    width: fit-content;
-    cursor: pointer;
-    color: var(--ink);
-  }
-
-  .about-note-content {
-    max-width: 35rem;
-    padding-top: 0.9rem;
-  }
-
-  .about-note-content p {
-    margin: 0;
-  }
-
-  .about-links {
-    display: flex;
-    gap: 0.6rem;
-    align-items: center;
-    padding-top: 0.8rem;
-  }
-
-  .about-links a {
-    color: var(--ink);
   }
 
   @media (max-width: 36rem) {
