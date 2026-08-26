@@ -1,6 +1,6 @@
 ---
 import { Image } from 'astro:assets';
-import avatar from '../images/avatar.jpg';
+import portrait from '../images/portrait.jpeg';
 import AshbyLink from '../components/AshbyLink.astro';
 import Layout from '../layouts/Layout.astro';
 ---
@@ -15,7 +15,7 @@ import Layout from '../layouts/Layout.astro';
     <div class="about-content">
       <Image
         class="portrait"
-        src={avatar}
+        src={portrait}
         alt="Kacper Cygan"
         width={224}
         height={224}
@@ -68,9 +68,13 @@ import Layout from '../layouts/Layout.astro';
   .portrait {
     width: 7rem;
     height: 7rem;
-    border-radius: 50%;
+    border: 1px solid var(--ink);
+    border-radius: 0.35rem;
+    box-shadow:
+      0 1px 2px rgb(0 0 0 / 0.14),
+      0 5px 14px rgb(0 0 0 / 0.08);
     object-fit: cover;
-    object-position: center 35%;
+    transform: rotate(-1.5deg);
   }
 
   .prose {

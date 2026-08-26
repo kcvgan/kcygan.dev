@@ -2,8 +2,8 @@
   color-scheme: light;
   --paper: #f7f5ef;
   --paper-deep: #ebe7dc;
-  --canvas: #d8d3c7;
-  --frame-line: #bdb6a8;
+  --canvas: #171714;
+  --frame-line: #0e0e0c;
   --ink: #1d1c19;
   --muted: #6d6960;
   --rule: #d8d3c7;
@@ -109,13 +109,25 @@ svg {
   text-decoration: none;
 }
 
-.site-avatar {
+.site-avatar-frame {
+  flex: 0 0 auto;
   width: 2.1rem;
   height: 2.1rem;
-  border: 1px solid var(--rule);
-  border-radius: 50%;
+  overflow: hidden;
+  border: 1px solid var(--ink);
+  border-radius: 0.25rem;
+  box-shadow:
+    0 1px 2px rgb(0 0 0 / 0.14),
+    0 3px 8px rgb(0 0 0 / 0.08);
+  transform: rotate(-2deg);
+}
+
+.site-avatar {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  object-position: center 35%;
+  transform: scale(1.8);
+  transform-origin: 51% 51%;
 }
 
 .site-header nav {
