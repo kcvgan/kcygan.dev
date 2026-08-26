@@ -29,7 +29,6 @@ const groups = groupNames.map((name) => ({
   name,
   books: books.filter((book) => groupFor(book) === name),
 }));
-const leanAngles = [-1.2, 0.7, -0.45, 1.1, -0.8, 0.35, -0.25];
 ---
 
 <Layout
@@ -39,12 +38,6 @@ const leanAngles = [-1.2, 0.7, -0.45, 1.1, -0.8, 0.35, -0.25];
   <div class="bookshelf-page" data-bookshelf>
     <header class="bookshelf-intro">
       <h1>Bookshelf</h1>
-      <p>
-        <span data-visible-count>{books.length}</span> books read, from
-        <a href="https://www.goodreads.com/review/list/32242336?shelf=read" rel="me noreferrer">
-          Goodreads
-        </a>.
-      </p>
     </header>
 
     <div class="bookshelf-tools">
@@ -74,7 +67,7 @@ const leanAngles = [-1.2, 0.7, -0.45, 1.1, -0.8, 0.35, -0.25];
           </header>
 
           <ol class="book-grid">
-            {group.books.map((book, index) => (
+            {group.books.map((book) => (
               <li
                 class="book-slot"
                 data-book-slot
@@ -85,7 +78,6 @@ const leanAngles = [-1.2, 0.7, -0.45, 1.1, -0.8, 0.35, -0.25];
                   class="book-card"
                   href={book.url}
                   aria-label={`${book.title} by ${book.author}`}
-                  style={`--lean: ${leanAngles[index % leanAngles.length]}deg`}
                   data-book-card
                   data-title={book.title}
                   data-author={book.author}
@@ -93,8 +85,6 @@ const leanAngles = [-1.2, 0.7, -0.45, 1.1, -0.8, 0.35, -0.25];
                   data-url={book.url}
                   data-rating={book.rating ?? ''}
                   data-date-read={book.dateRead ?? ''}
-                  data-year-published={book.yearPublished ?? ''}
-                  data-pages={book.pages ?? ''}
                 >
                   <span class="book-jacket">
                     <img
@@ -124,28 +114,20 @@ const leanAngles = [-1.2, 0.7, -0.45, 1.1, -0.8, 0.35, -0.25];
     </div>
 
     <dialog class="book-dialog" data-book-dialog aria-labelledby="book-dialog-title">
-      <form method="dialog">
-        <button class="dialog-close" value="close" aria-label="Close book details">×</button>
+      <form>
+        <button class="dialog-close" type="button" aria-label="Close book details" data-dialog-close>
+          ×
+        </button>
       </form>
       <div class="dialog-layout">
         <div class="dialog-cover-wrap">
-          <img data-dialog-cover src="" alt="" width="320" height="480" />
+          <img data-dialog-cover src="" alt="" />
         </div>
         <div class="dialog-copy">
           <p class="dialog-kicker" data-dialog-read></p>
           <h2 id="book-dialog-title" data-dialog-title></h2>
           <p class="dialog-author" data-dialog-author></p>
           <p class="dialog-rating" data-dialog-rating></p>
-          <dl class="dialog-facts">
-            <div data-dialog-published-row>
-              <dt>Published</dt>
-              <dd data-dialog-published></dd>
-            </div>
-            <div data-dialog-pages-row>
-              <dt>Length</dt>
-              <dd data-dialog-pages></dd>
-            </div>
-          </dl>
           <a class="goodreads-link" data-dialog-link href="" rel="noreferrer">
             View on Goodreads <span aria-hidden="true">↗</span>
           </a>
@@ -163,10 +145,12 @@ const leanAngles = [-1.2, 0.7, -0.45, 1.1, -0.8, 0.35, -0.25];
     const filters = [...bookshelf.querySelectorAll<HTMLButtonElement>('[data-year-filter]')];
     const slots = [...bookshelf.querySelectorAll<HTMLElement>('[data-book-slot]')];
     const sections = [...bookshelf.querySelectorAll<HTMLElement>('[data-year-section]')];
-    const visibleCount = bookshelf.querySelector<HTMLElement>('[data-visible-count]');
     const noResults = bookshelf.querySelector<HTMLElement>('[data-no-results]');
     const dialog = bookshelf.querySelector<HTMLDialogElement>('[data-book-dialog]');
+    const closeButton = dialog?.querySelector<HTMLButtonElement>('[data-dialog-close]');
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     let activeYear = 'all';
+    let closeTimer: number | undefined;
 
     const applyFilters = () => {
       const query = search?.value.trim().toLocaleLowerCase() ?? '';
@@ -188,7 +172,6 @@ const leanAngles = [-1.2, 0.7, -0.45, 1.1, -0.8, 0.35, -0.25];
         if (sectionCount) sectionCount.textContent = String(visibleBooks.length);
       }
 
-      if (visibleCount) visibleCount.textContent = String(count);
       if (noResults) noResults.hidden = count !== 0;
     };
 
@@ -214,14 +197,31 @@ const leanAngles = [-1.2, 0.7, -0.45, 1.1, -0.8, 0.35, -0.25];
       }).format(date)}`;
     };
 
-    const setOptionalFact = (
-      row: HTMLElement | null,
-      valueNode: HTMLElement | null,
-      value: string,
-      suffix = '',
-    ) => {
-      if (row) row.hidden = !value;
-      if (valueNode) valueNode.textContent = value ? `${value}${suffix}` : '';
+    const openSheet = () => {
+      if (!dialog) return;
+      if (closeTimer) window.clearTimeout(closeTimer);
+      if (!dialog.open) dialog.showModal();
+
+      if (reducedMotion) {
+        dialog.classList.add('is-visible');
+        return;
+      }
+
+      window.requestAnimationFrame(() => {
+        window.requestAnimationFrame(() => dialog.classList.add('is-visible'));
+      });
+    };
+
+    const closeSheet = () => {
+      if (!dialog?.open) return;
+      dialog.classList.remove('is-visible');
+
+      if (reducedMotion) {
+        dialog.close();
+        return;
+      }
+
+      closeTimer = window.setTimeout(() => dialog.close(), 430);
     };
 
     for (const card of bookshelf.querySelectorAll<HTMLAnchorElement>('[data-book-card]')) {
@@ -252,22 +252,10 @@ const leanAngles = [-1.2, 0.7, -0.45, 1.1, -0.8, 0.35, -0.25];
           rating.setAttribute('aria-label', bookRating ? `${bookRating} out of 5 stars` : 'Not rated');
         }
 
-        setOptionalFact(
-          dialog.querySelector<HTMLElement>('[data-dialog-published-row]'),
-          dialog.querySelector<HTMLElement>('[data-dialog-published]'),
-          card.dataset.yearPublished ?? '',
-        );
-        setOptionalFact(
-          dialog.querySelector<HTMLElement>('[data-dialog-pages-row]'),
-          dialog.querySelector<HTMLElement>('[data-dialog-pages]'),
-          card.dataset.pages ?? '',
-          ' pages',
-        );
-
-        dialog.showModal();
+        openSheet();
       });
 
-      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      if (!reducedMotion) {
         card.addEventListener('mousemove', (event) => {
           const rect = card.getBoundingClientRect();
           const x = (event.clientX - rect.left) / rect.width - 0.5;
@@ -284,8 +272,21 @@ const leanAngles = [-1.2, 0.7, -0.45, 1.1, -0.8, 0.35, -0.25];
       }
     }
 
+    closeButton?.addEventListener('click', closeSheet);
+
     dialog?.addEventListener('click', (event) => {
-      if (event.target === dialog) dialog.close();
+      if (event.target === dialog) closeSheet();
+    });
+
+    dialog?.addEventListener('cancel', (event) => {
+      event.preventDefault();
+      closeSheet();
+    });
+
+    dialog?.addEventListener('close', () => {
+      if (closeTimer) window.clearTimeout(closeTimer);
+      closeTimer = undefined;
+      dialog.classList.remove('is-visible');
     });
   }
 </script>
@@ -303,10 +304,6 @@ const leanAngles = [-1.2, 0.7, -0.45, 1.1, -0.8, 0.35, -0.25];
   }
 
   .bookshelf-intro {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 2rem;
     padding-bottom: 1.25rem;
     border-bottom: 1px solid var(--rule);
   }
@@ -322,16 +319,6 @@ const leanAngles = [-1.2, 0.7, -0.45, 1.1, -0.8, 0.35, -0.25];
     font-weight: 600;
     letter-spacing: -0.025em;
     line-height: 1.1;
-  }
-
-  .bookshelf-intro p {
-    margin: 0;
-    color: var(--muted);
-    font-size: 0.8rem;
-  }
-
-  .bookshelf-intro a {
-    color: var(--ink);
   }
 
   .bookshelf-tools {
@@ -498,7 +485,7 @@ const leanAngles = [-1.2, 0.7, -0.45, 1.1, -0.8, 0.35, -0.25];
     width: 100%;
     border-radius: 0.16rem 0.28rem 0.28rem 0.16rem;
     background: var(--paper-deep);
-    transform: rotateZ(var(--lean)) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+    transform: rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
     transform-origin: center bottom;
     box-shadow:
       -2px 2px 0 color-mix(in srgb, var(--ink) 20%, transparent),
@@ -568,8 +555,7 @@ const leanAngles = [-1.2, 0.7, -0.45, 1.1, -0.8, 0.35, -0.25];
 
   .book-card:hover .book-jacket,
   .book-card:focus-visible .book-jacket {
-    transform: translateY(-0.4rem) rotateZ(0deg) rotateX(var(--tilt-x, 0deg))
-      rotateY(var(--tilt-y, 0deg));
+    transform: translateY(-0.4rem) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
     box-shadow:
       -2px 2px 0 color-mix(in srgb, var(--ink) 18%, transparent),
       0 14px 23px rgb(29 28 25 / 0.18),
@@ -606,18 +592,43 @@ const leanAngles = [-1.2, 0.7, -0.45, 1.1, -0.8, 0.35, -0.25];
   }
 
   .book-dialog {
-    width: min(42rem, calc(100% - 2rem));
+    position: fixed;
+    inset: 0 0 0 auto;
+    width: min(32rem, calc(100% - 1rem));
+    max-width: none;
+    height: 100dvh;
+    max-height: none;
+    margin: 0;
     padding: 0;
-    overflow: visible;
-    border: 1px solid color-mix(in srgb, var(--ink) 45%, transparent);
-    border-radius: 0.7rem;
+    overflow-y: auto;
+    border: 0;
+    border-left: 1px solid color-mix(in srgb, var(--ink) 28%, transparent);
+    border-radius: 0.85rem 0 0 0.85rem;
     background: var(--paper);
     color: var(--ink);
-    box-shadow: 0 24px 70px rgb(0 0 0 / 0.35);
+    opacity: 0;
+    transform: translateX(100%);
+    box-shadow: -18px 0 50px rgb(29 28 25 / 0.2);
+    transition:
+      opacity 220ms ease,
+      transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .book-dialog[open].is-visible {
+    opacity: 1;
+    transform: translateX(0);
   }
 
   .book-dialog::backdrop {
-    background: rgb(17 17 15 / 0.72);
+    background: transparent;
+    backdrop-filter: blur(0);
+    transition:
+      background 300ms ease,
+      backdrop-filter 300ms ease;
+  }
+
+  .book-dialog.is-visible::backdrop {
+    background: rgb(17 17 15 / 0.38);
     backdrop-filter: blur(3px);
   }
 
@@ -651,26 +662,54 @@ const leanAngles = [-1.2, 0.7, -0.45, 1.1, -0.8, 0.35, -0.25];
   }
 
   .dialog-layout {
-    display: grid;
-    grid-template-columns: 14rem minmax(0, 1fr);
-    gap: 2.5rem;
-    align-items: center;
-    padding: 2.5rem;
+    display: flex;
+    min-height: 100%;
+    flex-direction: column;
+    gap: 2rem;
+    padding: 4rem 2.75rem 3rem;
   }
 
   .dialog-cover-wrap {
-    transform: rotate(-1.1deg);
+    width: min(100%, 18rem);
+    margin-inline: auto;
+    opacity: 0;
+    filter: blur(8px);
+    transform: translateX(2.5rem) scale(0.94) rotate(1.5deg);
+    transition:
+      opacity 280ms ease 70ms,
+      filter 420ms ease 70ms,
+      transform 520ms cubic-bezier(0.22, 1, 0.36, 1) 50ms;
+  }
+
+  .book-dialog.is-visible .dialog-cover-wrap {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateX(0) scale(1) rotate(-0.8deg);
   }
 
   .dialog-cover-wrap img {
-    aspect-ratio: 2 / 3;
+    display: block;
     width: 100%;
     height: auto;
+    max-height: 56dvh;
     border-radius: 0.2rem;
-    object-fit: cover;
+    object-fit: contain;
     box-shadow:
       -3px 3px 0 color-mix(in srgb, var(--ink) 18%, transparent),
       0 13px 28px rgb(29 28 25 / 0.2);
+  }
+
+  .dialog-copy {
+    opacity: 0;
+    transform: translateX(1.25rem);
+    transition:
+      opacity 300ms ease 150ms,
+      transform 440ms cubic-bezier(0.22, 1, 0.36, 1) 130ms;
+  }
+
+  .book-dialog.is-visible .dialog-copy {
+    opacity: 1;
+    transform: translateX(0);
   }
 
   .dialog-kicker {
@@ -704,31 +743,9 @@ const leanAngles = [-1.2, 0.7, -0.45, 1.1, -0.8, 0.35, -0.25];
     letter-spacing: 0.13em;
   }
 
-  .dialog-facts {
-    display: flex;
-    gap: 2rem;
-    margin: 1.5rem 0 2rem;
-  }
-
-  .dialog-facts div {
-    display: grid;
-    gap: 0.1rem;
-  }
-
-  .dialog-facts dt {
-    color: var(--muted);
-    font-size: 0.62rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-  }
-
-  .dialog-facts dd {
-    margin: 0;
-    font-family: var(--font-serif);
-    font-size: 0.92rem;
-  }
-
   .goodreads-link {
+    display: inline-block;
+    margin-top: 1.75rem;
     font-size: 0.78rem;
   }
 
@@ -787,11 +804,6 @@ const leanAngles = [-1.2, 0.7, -0.45, 1.1, -0.8, 0.35, -0.25];
       width: min(100% - 2.5rem, 64rem);
     }
 
-    .bookshelf-intro {
-      display: grid;
-      gap: 0.7rem;
-    }
-
     .shelf-collection {
       margin-top: 2.75rem;
     }
@@ -818,11 +830,50 @@ const leanAngles = [-1.2, 0.7, -0.45, 1.1, -0.8, 0.35, -0.25];
       display: none;
     }
 
+    .book-dialog {
+      inset: auto 0 0;
+      width: 100%;
+      height: auto;
+      max-height: 88dvh;
+      border: 0;
+      border-top: 1px solid color-mix(in srgb, var(--ink) 28%, transparent);
+      border-radius: 1rem 1rem 0 0;
+      transform: translateY(100%);
+    }
+
+    .book-dialog[open].is-visible {
+      transform: translateY(0);
+    }
+
     .dialog-layout {
-      grid-template-columns: 7.5rem minmax(0, 1fr);
+      display: grid;
+      min-height: 0;
+      grid-template-columns: minmax(0, 9rem) minmax(0, 1fr);
       gap: 1.4rem;
       align-items: start;
-      padding: 2.75rem 1.25rem 1.5rem;
+      padding: 3.75rem 1.25rem 2rem;
+    }
+
+    .dialog-cover-wrap {
+      width: 100%;
+      margin: 0;
+      transform: translateY(1.5rem) scale(0.94) rotate(1.5deg);
+    }
+
+    .book-dialog.is-visible .dialog-cover-wrap {
+      transform: translateY(0) scale(1) rotate(-0.8deg);
+    }
+
+    .dialog-cover-wrap img {
+      max-height: 58dvh;
+    }
+
+    .dialog-copy {
+      transform: translateY(1rem);
+    }
+
+    .book-dialog.is-visible .dialog-copy {
+      transform: translateY(0);
     }
 
     .dialog-copy h2 {
@@ -833,10 +884,6 @@ const leanAngles = [-1.2, 0.7, -0.45, 1.1, -0.8, 0.35, -0.25];
       font-size: 0.92rem;
     }
 
-    .dialog-facts {
-      gap: 1rem;
-      margin-block: 1.15rem 1.4rem;
-    }
   }
 
   @media (max-width: 22rem) {
@@ -849,18 +896,22 @@ const leanAngles = [-1.2, 0.7, -0.45, 1.1, -0.8, 0.35, -0.25];
     }
 
     .dialog-layout {
-      grid-template-columns: 1fr;
+      grid-template-columns: minmax(0, 7rem) minmax(0, 1fr);
     }
 
     .dialog-cover-wrap {
-      width: 7.5rem;
+      width: 100%;
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
     .book-jacket,
     .book-jacket::after,
-    .book-peek {
+    .book-peek,
+    .book-dialog,
+    .book-dialog::backdrop,
+    .dialog-cover-wrap,
+    .dialog-copy {
       transition: none;
     }
   }
