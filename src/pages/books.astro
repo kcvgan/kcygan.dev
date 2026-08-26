@@ -156,6 +156,7 @@ const groups = groupNames.map((name) => ({
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     let activeYear = 'all';
     let closeTimer: number | undefined;
+    let activeSourceCard: HTMLAnchorElement | undefined;
 
     const applyFilters = () => {
       const query = search?.value.trim().toLocaleLowerCase() ?? '';
@@ -217,6 +218,9 @@ const groups = groupNames.map((name) => ({
 
       if (reducedMotion) {
         dialog.classList.remove('is-measuring');
+        activeSourceCard?.classList.remove('is-focus-source');
+        activeSourceCard = card;
+        activeSourceCard.classList.add('is-focus-source');
         dialog.classList.add('is-visible');
         return;
       }
@@ -239,6 +243,9 @@ const groups = groupNames.map((name) => ({
 
         dialog.classList.remove('is-visible', 'is-measuring');
         dialog.getBoundingClientRect();
+        activeSourceCard?.classList.remove('is-focus-source');
+        activeSourceCard = card;
+        activeSourceCard.classList.add('is-focus-source');
 
         window.requestAnimationFrame(() => dialog.classList.add('is-visible'));
       });
@@ -310,7 +317,8 @@ const groups = groupNames.map((name) => ({
     closeButton?.addEventListener('click', closeFocus);
 
     dialog?.addEventListener('click', (event) => {
-      if (event.target === dialog) closeFocus();
+      const target = event.target as HTMLElement;
+      if (target === dialog || target.classList.contains('dialog-layout')) closeFocus();
     });
 
     dialog?.addEventListener('cancel', (event) => {
@@ -327,6 +335,8 @@ const groups = groupNames.map((name) => ({
     dialog?.addEventListener('close', () => {
       if (closeTimer) window.clearTimeout(closeTimer);
       closeTimer = undefined;
+      activeSourceCard?.classList.remove('is-focus-source');
+      activeSourceCard = undefined;
       dialog.classList.remove('is-visible', 'is-measuring');
     });
   }
@@ -558,6 +568,11 @@ const groups = groupNames.map((name) => ({
     object-fit: cover;
   }
 
+  .book-card.is-focus-source .book-jacket {
+    opacity: 0;
+    transition: none;
+  }
+
   .book-peek {
     position: absolute;
     right: 0;
@@ -640,11 +655,11 @@ const groups = groupNames.map((name) => ({
     height: 100dvh;
     max-height: none;
     margin: 0;
-    padding: 1.25rem;
+    padding: 0;
     overflow: hidden;
     border: 0;
     background: transparent;
-    color: var(--ink);
+    color: #f8f5ec;
     outline: none;
   }
 
@@ -657,8 +672,8 @@ const groups = groupNames.map((name) => ({
   }
 
   .book-dialog.is-visible::backdrop {
-    background: rgb(17 17 15 / 0.36);
-    backdrop-filter: blur(7px);
+    background: rgb(17 17 15 / 0.5);
+    backdrop-filter: blur(8px);
   }
 
   .book-dialog.is-measuring::backdrop {
@@ -670,17 +685,17 @@ const groups = groupNames.map((name) => ({
   .dialog-close {
     position: absolute;
     z-index: 3;
-    top: 0.8rem;
-    right: 0.8rem;
+    top: 1.25rem;
+    right: 1.25rem;
     display: grid;
     place-items: center;
     width: 2rem;
     height: 2rem;
     padding: 0;
-    border: 1px solid var(--rule);
+    border: 1px solid rgb(255 255 255 / 0.35);
     border-radius: 50%;
-    background: color-mix(in srgb, var(--paper) 92%, transparent);
-    color: var(--ink);
+    background: rgb(17 17 15 / 0.24);
+    color: #fff;
     cursor: pointer;
     font: inherit;
     font-size: 1.3rem;
@@ -699,7 +714,8 @@ const groups = groupNames.map((name) => ({
   }
 
   .dialog-close:hover {
-    border-color: var(--muted);
+    border-color: rgb(255 255 255 / 0.7);
+    background: rgb(17 17 15 / 0.4);
   }
 
   .dialog-close:focus-visible {
@@ -708,39 +724,18 @@ const groups = groupNames.map((name) => ({
   }
 
   .dialog-layout {
-    position: relative;
-    top: 50%;
-    display: grid;
-    width: min(100%, 49rem);
-    max-height: calc(100dvh - 2.5rem);
-    grid-template-columns: minmax(13rem, 18rem) minmax(0, 1fr);
-    gap: clamp(2rem, 5vw, 3.5rem);
-    align-items: center;
-    margin-inline: auto;
-    padding: clamp(2rem, 4vw, 3rem);
-    overflow-y: auto;
-    border: 1px solid transparent;
-    border-radius: 0.65rem;
-    background: transparent;
-    box-shadow: 0 16px 50px transparent;
-    outline: none;
-    transform: translateY(-50%);
-    transition:
-      background 160ms ease 35ms,
-      border-color 160ms ease 35ms,
-      box-shadow 190ms ease 35ms;
-  }
-
-  .book-dialog.is-visible .dialog-layout {
-    border-color: color-mix(in srgb, var(--ink) 22%, transparent);
-    background: color-mix(in srgb, var(--paper) 96%, transparent);
-    box-shadow: 0 22px 65px rgb(17 17 15 / 0.28);
-  }
-
-  .book-dialog.is-measuring .dialog-layout {
-    border-color: transparent;
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: visible;
+    border: 0;
     background: transparent;
     box-shadow: none;
+    outline: none;
     transition: none;
   }
 
@@ -751,11 +746,14 @@ const groups = groupNames.map((name) => ({
   }
 
   .dialog-cover-wrap {
+    position: absolute;
     z-index: 1;
-    width: 100%;
+    top: 50%;
+    left: 50%;
+    width: clamp(15rem, 22.5vw, 18rem);
     opacity: 0.88;
     filter: blur(3px);
-    transform: translate(var(--cover-from-x, 0), var(--cover-from-y, 0))
+    transform: translate(-50%, -50%) translate(var(--cover-from-x, 0), var(--cover-from-y, 0))
       scale(var(--cover-from-scale-x, 0.86), var(--cover-from-scale-y, 0.86));
     transform-origin: center;
     transition:
@@ -767,13 +765,13 @@ const groups = groupNames.map((name) => ({
   .book-dialog.is-visible .dialog-cover-wrap {
     opacity: 1;
     filter: blur(0);
-    transform: translate(0, 0) scale(1);
+    transform: translate(-50%, -50%) scale(1);
   }
 
   .book-dialog.is-measuring .dialog-cover-wrap {
     opacity: 0;
     filter: none;
-    transform: none;
+    transform: translate(-50%, -50%);
     transition: none;
   }
 
@@ -781,17 +779,21 @@ const groups = groupNames.map((name) => ({
     display: block;
     width: 100%;
     height: auto;
-    max-height: calc(100dvh - 8.5rem);
+    max-height: 72dvh;
     border-radius: 0.2rem;
     object-fit: contain;
     box-shadow:
-      -3px 3px 0 color-mix(in srgb, var(--ink) 18%, transparent),
-      0 13px 28px rgb(29 28 25 / 0.2);
+      -3px 3px 0 rgb(255 255 255 / 0.18),
+      0 22px 55px rgb(0 0 0 / 0.44);
   }
 
   .dialog-copy {
+    position: absolute;
+    top: 50%;
+    left: calc(50% + clamp(10rem, 17vw, 12rem));
+    width: min(19rem, calc(50vw - 13rem));
     opacity: 0;
-    transform: translateX(0.8rem);
+    transform: translateY(-50%) translateX(0.8rem);
     transition:
       opacity 150ms ease 60ms,
       transform 190ms cubic-bezier(0.2, 0.8, 0.2, 1) 45ms;
@@ -799,7 +801,7 @@ const groups = groupNames.map((name) => ({
 
   .book-dialog.is-visible .dialog-copy {
     opacity: 1;
-    transform: translateX(0);
+    transform: translateY(-50%) translateX(0);
   }
 
   .book-dialog.is-measuring .dialog-copy,
@@ -810,7 +812,7 @@ const groups = groupNames.map((name) => ({
 
   .dialog-kicker {
     margin: 0 0 0.65rem;
-    color: var(--muted);
+    color: rgb(255 255 255 / 0.58);
     font-size: 0.72rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
@@ -823,18 +825,19 @@ const groups = groupNames.map((name) => ({
     letter-spacing: -0.03em;
     line-height: 1.05;
     text-wrap: balance;
+    color: #fff;
   }
 
   .dialog-author {
     margin: 0.65rem 0 0;
-    color: var(--muted);
+    color: rgb(255 255 255 / 0.7);
     font-family: var(--font-serif);
     font-size: 1.05rem;
   }
 
   .dialog-rating {
     margin: 1.25rem 0 0;
-    color: var(--accent);
+    color: #f1aaa1;
     font-size: 0.9rem;
     letter-spacing: 0.13em;
   }
@@ -842,7 +845,9 @@ const groups = groupNames.map((name) => ({
   .goodreads-link {
     display: inline-block;
     margin-top: 1.75rem;
+    color: #fff;
     font-size: 0.78rem;
+    text-decoration-color: rgb(255 255 255 / 0.45);
   }
 
   .visually-hidden {
@@ -938,18 +943,54 @@ const groups = groupNames.map((name) => ({
     }
 
     .dialog-layout {
+      position: relative;
+      inset: auto;
+      top: 50%;
       display: grid;
-      width: 100%;
+      width: min(100%, 23rem);
+      height: auto;
       max-height: calc(100dvh - 1.5rem);
-      grid-template-columns: minmax(0, 8.5rem) minmax(0, 1fr);
-      gap: 1.25rem;
-      align-items: start;
-      padding: 3.5rem 1rem 1.5rem;
-      border-radius: 0.65rem;
+      grid-template-columns: 1fr;
+      gap: 1.1rem;
+      justify-items: center;
+      margin-inline: auto;
+      padding: 2.75rem 1rem 1.25rem;
+      overflow-y: auto;
+      transform: translateY(-50%);
+    }
+
+    .dialog-cover-wrap {
+      position: relative;
+      top: auto;
+      left: auto;
+      width: min(9rem, 45vw);
+      transform: translate(var(--cover-from-x, 0), var(--cover-from-y, 0))
+        scale(var(--cover-from-scale-x, 0.86), var(--cover-from-scale-y, 0.86));
+    }
+
+    .book-dialog.is-visible .dialog-cover-wrap {
+      transform: translate(0, 0) scale(1);
+    }
+
+    .book-dialog.is-measuring .dialog-cover-wrap {
+      transform: none;
     }
 
     .dialog-cover-wrap img {
-      max-height: calc(100dvh - 6.5rem);
+      max-height: 45dvh;
+    }
+
+    .dialog-copy {
+      position: relative;
+      top: auto;
+      left: auto;
+      width: min(100%, 20rem);
+      text-align: center;
+      transform: translateY(0.65rem);
+    }
+
+    .book-dialog.is-visible .dialog-copy {
+      transform: translateY(0);
     }
 
     .dialog-copy h2 {
@@ -958,6 +999,10 @@ const groups = groupNames.map((name) => ({
 
     .dialog-author {
       font-size: 0.92rem;
+    }
+
+    .goodreads-link {
+      margin-top: 1.25rem;
     }
 
   }
@@ -971,13 +1016,6 @@ const groups = groupNames.map((name) => ({
       height: 11.75rem;
     }
 
-    .dialog-layout {
-      grid-template-columns: minmax(0, 7rem) minmax(0, 1fr);
-    }
-
-    .dialog-cover-wrap {
-      width: 100%;
-    }
   }
 
   @media (prefers-reduced-motion: reduce) {
