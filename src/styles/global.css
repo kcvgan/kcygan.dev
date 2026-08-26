@@ -82,10 +82,6 @@ svg {
   margin-inline: auto;
 }
 
-.books-page .site-shell {
-  width: min(100% - 3rem, 64rem);
-}
-
 .site-header .site-shell {
   display: flex;
   align-items: center;
@@ -150,10 +146,6 @@ svg {
 
   .site-shell {
     width: min(100% - 2.5rem, var(--measure));
-  }
-
-  .books-page .site-shell {
-    width: min(100% - 2.5rem, 64rem);
   }
 
   .site-header .site-shell {

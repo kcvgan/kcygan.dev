@@ -350,7 +350,7 @@ const groups = groupNames.map((name) => ({
   .bookshelf-intro,
   .bookshelf-tools,
   .shelf-collection {
-    width: min(100% - 3rem, 64rem);
+    width: min(100% - 3rem, var(--measure));
     margin-inline: auto;
   }
 
@@ -491,7 +491,7 @@ const groups = groupNames.map((name) => ({
 
   .book-grid {
     display: grid;
-    grid-template-columns: repeat(7, minmax(0, 1fr));
+    grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 1.55rem 0.9rem;
     margin: 0;
     padding: 0;
@@ -861,18 +861,6 @@ const groups = groupNames.map((name) => ({
     border: 0;
   }
 
-  @media (max-width: 68rem) {
-    .book-grid {
-      grid-template-columns: repeat(6, minmax(0, 1fr));
-    }
-  }
-
-  @media (max-width: 56rem) {
-    .book-grid {
-      grid-template-columns: repeat(5, minmax(0, 1fr));
-    }
-  }
-
   @media (max-width: 43rem) {
     .book-grid {
       grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -902,7 +890,7 @@ const groups = groupNames.map((name) => ({
     .bookshelf-intro,
     .bookshelf-tools,
     .shelf-collection {
-      width: min(100% - 2.5rem, 64rem);
+      width: min(100% - 2.5rem, var(--measure));
     }
 
     .shelf-collection {
