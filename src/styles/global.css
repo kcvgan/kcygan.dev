@@ -40,18 +40,9 @@ body {
   min-height: calc(100vh - 1rem);
   min-height: calc(100dvh - 1rem);
   margin: 0.5rem;
-  border-radius: 0.65rem;
-  background: var(--paper);
-}
-
-body::before {
-  content: "";
-  position: fixed;
-  z-index: 100;
-  inset: 0.5rem;
   border: 1px solid var(--frame-line);
   border-radius: 0.65rem;
-  pointer-events: none;
+  background: var(--paper);
 }
 
 main {
@@ -190,11 +181,6 @@ svg {
     min-height: calc(100vh - 0.75rem);
     min-height: calc(100dvh - 0.75rem);
     margin: 0.375rem;
-    border-radius: 0.75rem;
-  }
-
-  body::before {
-    inset: 0.375rem;
     border-radius: 0.75rem;
   }
 }
