@@ -1,5 +1,7 @@
 ---
+import PortraitStamp from '../components/PortraitStamp.astro';
 import PostList from '../components/PostList.astro';
+import AshbyLink from '../components/AshbyLink.astro';
 import Layout from '../layouts/Layout.astro';
 import { getPublishedPosts } from '../lib/posts';
 
@@ -8,11 +10,25 @@ const posts = await getPublishedPosts();
 
 <Layout
   title="Home"
-  description="The personal website and writing archive of Kacper Cygan, a product engineer at Ashby."
+  description="Kacper Cygan’s personal website. Product engineer at Ashby, enjoying fatherhood, reading, and lately, writing."
 >
   <div class="home">
+    <section class="introduction" aria-labelledby="hello-title">
+      <div class="greeting">
+        <PortraitStamp />
+        <h1 id="hello-title">I’m Kacper, nice to meet you.</h1>
+      </div>
+      <p>
+        Professionally, I’m a product engineer at <AshbyLink />. Outside work,
+        I enjoy fatherhood, reading, and lately, writing.
+      </p>
+      <p>
+        I made this website to motivate myself to put more of my thoughts into
+        words. <em>By gad, you’re under no obligation to read them!</em>
+      </p>
+    </section>
     <section class="writing" aria-labelledby="writing-title">
-      <h1 id="writing-title">Writing</h1>
+      <h2 id="writing-title">Writing</h2>
       {posts.length > 0 ? (
         <PostList posts={posts} />
       ) : (
@@ -26,15 +42,46 @@ const posts = await getPublishedPosts();
 <style>
   .home {
     width: min(100% - 3rem, var(--measure));
-    margin: 4rem auto 0;
+    margin: 4rem auto;
   }
 
-  h1 {
+  .introduction {
+    margin-bottom: 3.5rem;
+    font-family: var(--font-serif);
+    font-size: 1.18rem;
+    line-height: 1.7;
+  }
+
+  .greeting {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    margin-bottom: 1.75rem;
+  }
+
+  .introduction h1 {
+    margin: 0;
+    font-size: clamp(1.65rem, 4vw, 2rem);
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    line-height: 1.25;
+    text-wrap: balance;
+  }
+
+  .introduction p {
+    margin: 0 0 1.25em;
+  }
+
+  .introduction p:last-child {
+    margin-bottom: 0;
+  }
+
+  h2 {
     margin: 0 0 1.75rem;
     padding-bottom: 1rem;
     border-bottom: 1px solid var(--rule);
     font-family: var(--font-serif);
-    font-size: 2rem;
+    font-size: 1.4rem;
     font-weight: 600;
     letter-spacing: -0.025em;
     line-height: 1.1;
@@ -47,6 +94,11 @@ const posts = await getPublishedPosts();
   }
 
   @media (max-width: 36rem) {
+    .introduction {
+      font-size: 1.12rem;
+      margin-bottom: 2.75rem;
+    }
+
     .home {
       width: min(100% - 2.5rem, var(--measure));
       margin-top: 3rem;

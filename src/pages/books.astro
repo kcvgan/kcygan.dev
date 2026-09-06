@@ -1,5 +1,6 @@
 ---
 import booksData from '../data/books.json';
+import bookNotesData from '../data/book-notes.json';
 import currentlyReadingData from '../data/currently-reading.json';
 import Layout from '../layouts/Layout.astro';
 
@@ -18,6 +19,7 @@ interface Book {
 }
 
 const books = booksData as Book[];
+const bookNotes: Record<string, string> = bookNotesData;
 const currentlyReading = currentlyReadingData as Book[];
 const recentYearCutoff = 2020;
 const groupFor = (book: Book) =>
@@ -87,6 +89,7 @@ const shelfGroups = [
                   data-cover={book.cover}
                   data-url={book.url}
                   data-rating={book.rating ?? ''}
+                  data-note={bookNotes[book.id]}
                   data-date-read={book.dateRead ?? ''}
                   data-current-reading={group.current ? 'true' : undefined}
                 >
@@ -153,6 +156,10 @@ const shelfGroups = [
           <h2 id="book-dialog-title" data-dialog-title></h2>
           <p class="dialog-author" data-dialog-author></p>
           <p class="dialog-rating" data-dialog-rating></p>
+          <div class="dialog-note" data-dialog-note hidden>
+            <p class="note-label">My reading notes</p>
+            <p data-dialog-note-text></p>
+          </div>
           <a class="goodreads-link" data-dialog-link href="" rel="noreferrer">
             View on Goodreads <span aria-hidden="true">↗</span>
           </a>
@@ -231,6 +238,8 @@ const shelfGroups = [
       const author = dialog.querySelector<HTMLElement>('[data-dialog-author]');
       const read = dialog.querySelector<HTMLElement>('[data-dialog-read]');
       const rating = dialog.querySelector<HTMLElement>('[data-dialog-rating]');
+      const note = dialog.querySelector<HTMLElement>('[data-dialog-note]');
+      const noteText = dialog.querySelector<HTMLElement>('[data-dialog-note-text]');
       const link = dialog.querySelector<HTMLAnchorElement>('[data-dialog-link]');
       const sourceCover = card.querySelector<HTMLImageElement>('.book-jacket img');
 
@@ -242,6 +251,8 @@ const shelfGroups = [
       }
       if (title) title.textContent = card.dataset.title ?? '';
       if (author) author.textContent = card.dataset.author ?? '';
+      if (noteText) noteText.textContent = card.dataset.note ?? '';
+      if (note) note.hidden = !card.dataset.note;
       if (read) {
         read.textContent =
           card.dataset.currentReading === 'true'
@@ -962,6 +973,27 @@ const shelfGroups = [
     color: #fff;
     font-size: 0.78rem;
     text-decoration-color: rgb(255 255 255 / 0.45);
+  }
+
+  .dialog-note {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgb(255 255 255 / 0.2);
+    color: rgb(255 255 255 / 0.9);
+    font-family: var(--font-serif);
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+
+  .dialog-note p {
+    margin: 0;
+  }
+
+  .dialog-note .note-label {
+    margin-bottom: 0.5rem;
+    color: rgb(255 255 255 / 0.65);
+    font-family: var(--font-sans);
+    font-size: 0.7rem;
   }
 
   @media (max-width: 43rem) {

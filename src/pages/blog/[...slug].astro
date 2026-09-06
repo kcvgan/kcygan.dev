@@ -46,10 +46,19 @@ const stats = readingTime(post.body ?? '');
     <div class="prose">
       <Content />
     </div>
+    <div class="end-mark" aria-hidden="true">❦</div>
   </article>
 </Layout>
 
 <style>
+  .end-mark {
+    margin: 2.5rem auto 3.5rem;
+    color: var(--accent);
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    text-align: center;
+  }
+
   article {
     width: min(100% - 3rem, var(--measure));
     margin: 4rem auto 0;
