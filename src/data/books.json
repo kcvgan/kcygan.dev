@@ -1,5 +1,44 @@
 [
   {
+    "id": "48838041",
+    "title": "If It Bleeds",
+    "author": "Stephen King",
+    "cover": "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1598366651l/48838041._SY475_.jpg",
+    "url": "https://www.goodreads.com/book/show/48838041",
+    "rating": 4,
+    "dateRead": "2026-09-04",
+    "dateAdded": "2026-09-04",
+    "yearRead": "2026",
+    "yearPublished": 2020,
+    "pages": 436
+  },
+  {
+    "id": "149267",
+    "title": "The Stand",
+    "author": "Stephen King",
+    "cover": "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1213131305l/149267.jpg",
+    "url": "https://www.goodreads.com/book/show/149267",
+    "rating": 4,
+    "dateRead": "2026-09-04",
+    "dateAdded": "2026-09-04",
+    "yearRead": "2026",
+    "yearPublished": 1978,
+    "pages": 1152
+  },
+  {
+    "id": "10569",
+    "title": "On Writing: A Memoir of the Craft",
+    "author": "Stephen King",
+    "cover": "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1436735207l/10569._SY475_.jpg",
+    "url": "https://www.goodreads.com/book/show/10569",
+    "rating": 5,
+    "dateRead": "2026-08-27",
+    "dateAdded": "2026-08-27",
+    "yearRead": "2026",
+    "yearPublished": 2000,
+    "pages": 320
+  },
+  {
     "id": "26452130",
     "title": "Dare: The New Way to End Anxiety and Stop Panic Attacks Fast",
     "author": "Barry McDonagh",
