@@ -87,10 +87,10 @@ const minutes = Math.ceil(stats.minutes);
       const rect = prose.getBoundingClientRect();
       const { top: viewTop, bottom: viewBottom } = scroller.getBoundingClientRect();
       const travel = rect.height - (viewBottom - viewTop);
+      // Without real scrollable travel (layout not ready, or the article fits
+      // the viewport) there is nothing to finish, so stay at 0 / "N min read".
       const progress =
-        travel > 0
-          ? Math.min(Math.max((viewTop - rect.top) / travel, 0), 1)
-          : Number(rect.bottom <= viewBottom);
+        travel > 1 ? Math.min(Math.max((viewTop - rect.top) / travel, 0), 1) : 0;
 
       progressBar.style.transform = `scaleX(${progress})`;
       timeLabel.textContent =
@@ -107,7 +107,15 @@ const minutes = Math.ceil(stats.minutes);
 
     scroller.addEventListener('scroll', schedule, { passive: true });
     window.addEventListener('resize', schedule);
+    window.addEventListener('load', schedule);
+    if (typeof ResizeObserver !== 'undefined') {
+      const observer = new ResizeObserver(schedule);
+      observer.observe(prose);
+      observer.observe(scroller);
+    }
+    document.fonts?.ready.then(schedule);
     update();
+    schedule();
   }
 </script>
 
