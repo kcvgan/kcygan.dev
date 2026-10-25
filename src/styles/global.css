@@ -43,8 +43,9 @@
 
 html {
   min-width: 20rem;
-  background: var(--canvas);
-  background-attachment: fixed;
+  /* Solid base shows through iOS overscroll; the gradient lives on html::before
+     because iOS Safari ignores background-attachment: fixed. */
+  background-color: #f1efff;
   color: var(--ink);
   font-family: var(--font-sans);
   font-size: 106.25%;
@@ -52,6 +53,15 @@ html {
   line-height: 1.6;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
+}
+
+html::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: var(--canvas);
+  pointer-events: none;
 }
 
 body {
