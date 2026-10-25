@@ -30,7 +30,7 @@ const minutes = Math.ceil(stats.minutes);
       <a class="back-link" href="/" aria-label="Back to Writing">
         <span aria-hidden="true">←</span> <span class="back-label">Writing</span>
       </a>
-      <p class="reader-title">{post.data.title}</p>
+      <h1 class="reader-title" id="post-title" title={post.data.title}>{post.data.title}</h1>
       <time class="reader-date" datetime={post.data.date.toISOString()}>
         {formatDate(post.data.date)}
       </time>
@@ -38,17 +38,7 @@ const minutes = Math.ceil(stats.minutes);
   </header>
 
   <div class="reader-scroll" data-reader-scroll>
-  <article>
-    <header class="article-header">
-      <h1>{post.data.title}</h1>
-      {post.data.description && <p class="description">{post.data.description}</p>}
-      <p class="meta">
-        <time datetime={post.data.date.toISOString()}>{formatDate(post.data.date)}</time>
-        <span aria-hidden="true">·</span>
-        <span>{stats.text}</span>
-      </p>
-    </header>
-
+  <article aria-labelledby="post-title">
     {post.data.image && (
       <img
         class="cover"
@@ -173,9 +163,12 @@ const minutes = Math.ceil(stats.minutes);
     overflow: hidden;
     margin: 0;
     color: var(--ink);
+    font: inherit;
     font-family: var(--font-serif);
     font-size: 0.92rem;
     font-weight: 600;
+    letter-spacing: normal;
+    line-height: 1.3;
     text-align: center;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -218,39 +211,7 @@ const minutes = Math.ceil(stats.minutes);
   article {
     width: min(100% - 3rem, var(--measure));
     margin: 0 auto;
-    padding: 4rem 0 2.5rem;
-  }
-
-  .article-header {
-    margin-bottom: 3.2rem;
-  }
-
-  h1 {
-    max-width: 20ch;
-    margin: 0;
-    font-family: var(--font-serif);
-    font-size: clamp(2.25rem, 5vw, 3.25rem);
-    font-weight: 600;
-    letter-spacing: -0.035em;
-    line-height: 1.08;
-    text-wrap: balance;
-  }
-
-  .description {
-    max-width: 38rem;
-    margin: 1.35rem 0 0;
-    color: var(--muted);
-    font-size: 1.08rem;
-    line-height: 1.65;
-    text-wrap: pretty;
-  }
-
-  .meta {
-    display: flex;
-    gap: 0.55rem;
-    margin: 1.35rem 0 0;
-    color: var(--muted);
-    font-size: 0.76rem;
+    padding: 3rem 0 2.5rem;
   }
 
   .cover {
@@ -267,6 +228,15 @@ const minutes = Math.ceil(stats.minutes);
     font-family: var(--font-serif);
     font-size: clamp(1.14rem, 1.5vw, 1.23rem);
     line-height: 1.72;
+  }
+
+  .prose > :global(:first-child) {
+    margin-top: 0;
+  }
+
+  /* Title lives in the fixed reader bar; suppress a duplicate # heading in markdown. */
+  .prose :global(h1) {
+    display: none;
   }
 
   .prose :global(p),
@@ -289,12 +259,12 @@ const minutes = Math.ceil(stats.minutes);
 
   .prose :global(h2) {
     margin: 2.25em 0 0.7em;
-    font-size: 1.75rem;
+    font-size: 1.5rem;
   }
 
   .prose :global(h3) {
     margin: 2em 0 0.65em;
-    font-size: 1.35rem;
+    font-size: 1.2rem;
   }
 
   .prose :global(ul),
@@ -380,11 +350,7 @@ const minutes = Math.ceil(stats.minutes);
   @media (max-width: 36rem) {
     article {
       width: min(100% - 2.5rem, var(--measure));
-      padding-top: 2.75rem;
-    }
-
-    .article-header {
-      margin-bottom: 2.6rem;
+      padding-top: 2rem;
     }
 
     .reader-inner {
@@ -394,10 +360,6 @@ const minutes = Math.ceil(stats.minutes);
 
     .reader-title {
       text-align: left;
-    }
-
-    h1 {
-      font-size: 2.25rem;
     }
 
     .cover {

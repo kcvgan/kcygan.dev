@@ -2,7 +2,7 @@
 title: Why I built Collie
 date: '2026-10-20'
 draft: false
-description: Why I built Collie, a calm Mac writing app.
+description: A calm Mac writing app for getting thoughts out and reading them back.
 ---
 
 Since about November 2025, my work has shifted radically from implementation toward ideation. Agent loops, workflows, and software factories have taken over software development. We’re all still experimenting with them and, in theory, should be shipping more than ever. I’ve been through spinning too many plates at once and watching them come crashing down. I’ve had to reset, refocus, and learn that slowing down makes me go faster. Yet again, this is the case.
