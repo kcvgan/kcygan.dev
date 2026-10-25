@@ -14,7 +14,3 @@ All of this brings me to the one thing that propels me forward: a principled, di
 To make this easier, I wanted to start a side project I’d use every day. I thought of a text editor that works the way I work and gives me all the comforts I need to do my best work, in one place. Making Collie wouldn’t have been possible without agents. It took a couple of weekends of maxing out my personal Claude and ChatGPT subscriptions. I learned a ton along the way and had lots of fun! I showed it to friends, who wanted to try Collie too, and they liked it. Thanks to Adam, Davey, and Kai for trying it and giving me feedback. There are parts of this product that wouldn’t be what they are without them.
 
 I’m releasing Collie to a wider audience today. Can it be vibe coded? Surely. Can you do it better, dear reader? Possibly, yes. It might still be worth a try, though. If nothing else, come check out the cool [wallpapers](https://getcollie.cloud/wallpapers) I generated programmatically, and [get in touch](mailto:kacper@getcollie.cloud) if you’d like to chat.
-
-— Kacper Cygan
-
-[Collie](https://getcollie.cloud) is a writing app built for humans.

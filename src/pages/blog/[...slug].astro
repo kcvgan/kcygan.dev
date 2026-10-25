@@ -50,7 +50,14 @@ const minutes = Math.ceil(stats.minutes);
     <div class="prose" data-prose>
       <Content />
     </div>
-    <div class="end-mark" aria-hidden="true">❦</div>
+    <div class="end-mark" aria-hidden="true">
+      <span class="end-rule"></span>
+      <svg class="end-collie" viewBox="0 0 32 32" width="22" height="22" fill="currentColor">
+        <path d="M3 9.2 Q6 7.4 9.6 6.4 L11.2 2.4 Q12.4 2.6 12.9 3.8 L13.4 6.6 Q15.6 7.6 17 10.4 Q19.4 14 22.6 17.6 Q25.6 21 25.8 25.6 Q27.6 27.6 29.4 29 Q29.8 30.6 28 30.6 L10.4 30.6 Q9.8 30.6 10 29.6 L10.4 24 Q8.2 21.6 8.4 17.6 Q7.8 14.6 9 12.4 Q8 11.2 7 10.8 Q4.6 10.6 3.2 10.2 Q2.6 9.7 3 9.2 Z"/>
+      </svg>
+      <span class="end-rule"></span>
+      <span class="end-place">Wrocław</span>
+    </div>
   </article>
   </div>
 
@@ -201,11 +208,35 @@ const minutes = Math.ceil(stats.minutes);
   }
 
   .end-mark {
-    margin: 2.5rem auto 3.5rem;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 0.9rem;
+    width: min(100% - 3rem, 14rem);
+    margin: 3rem auto 3.5rem;
     color: var(--accent);
+  }
+
+  .end-rule {
+    height: 1px;
+    background: currentColor;
+    opacity: 0.35;
+  }
+
+  .end-collie {
+    display: block;
+    opacity: 0.85;
+  }
+
+  .end-place {
+    grid-column: 1 / -1;
+    margin-top: 0.15rem;
     font-family: var(--font-serif);
-    font-size: 1.5rem;
+    font-size: 0.72rem;
+    font-variant: small-caps;
+    letter-spacing: 0.14em;
     text-align: center;
+    opacity: 0.6;
   }
 
   article {
