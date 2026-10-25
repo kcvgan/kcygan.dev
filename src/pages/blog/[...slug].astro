@@ -27,7 +27,7 @@ const minutes = Math.ceil(stats.minutes);
 >
   <header class="reader-bar reader-top">
     <div class="reader-inner">
-      <a class="back-link" href="/blog" aria-label="Back to Writing">
+      <a class="back-link" href="/" aria-label="Back to Writing">
         <span aria-hidden="true">←</span> <span class="back-label">Writing</span>
       </a>
       <p class="reader-title">{post.data.title}</p>
@@ -37,6 +37,7 @@ const minutes = Math.ceil(stats.minutes);
     </div>
   </header>
 
+  <div class="reader-scroll" data-reader-scroll>
   <article>
     <header class="article-header">
       <h1>{post.data.title}</h1>
@@ -61,6 +62,7 @@ const minutes = Math.ceil(stats.minutes);
     </div>
     <div class="end-mark" aria-hidden="true">❦</div>
   </article>
+  </div>
 
   <footer class="reader-bar reader-bottom">
     <div class="reader-inner">
@@ -71,21 +73,19 @@ const minutes = Math.ceil(stats.minutes);
 </Layout>
 
 <script>
+  const scroller = document.querySelector<HTMLElement>('[data-reader-scroll]');
   const prose = document.querySelector<HTMLElement>('[data-prose]');
   const progressBar = document.querySelector<HTMLElement>('[data-reader-progress]');
   const timeLabel = document.querySelector<HTMLElement>('[data-reader-time]');
-  const top = document.querySelector<HTMLElement>('.reader-top');
-  const bottom = document.querySelector<HTMLElement>('.reader-bottom');
 
-  if (prose && progressBar && timeLabel && top && bottom) {
+  if (scroller && prose && progressBar && timeLabel) {
     const totalMinutes = Number(timeLabel.dataset.minutes);
     let frame = 0;
 
     const update = () => {
       frame = 0;
       const rect = prose.getBoundingClientRect();
-      const viewTop = top.offsetHeight;
-      const viewBottom = window.innerHeight - bottom.offsetHeight;
+      const { top: viewTop, bottom: viewBottom } = scroller.getBoundingClientRect();
       const travel = rect.height - (viewBottom - viewTop);
       const progress =
         travel > 0
@@ -105,34 +105,36 @@ const minutes = Math.ceil(stats.minutes);
       if (!frame) frame = requestAnimationFrame(update);
     };
 
-    window.addEventListener('scroll', schedule, { passive: true });
+    scroller.addEventListener('scroll', schedule, { passive: true });
     window.addEventListener('resize', schedule);
     update();
   }
 </script>
 
 <style>
-  :global(html) {
-    scroll-padding-block: 4.5rem 3.5rem;
-  }
-
-  /* Canvas-coloured outer padding keeps the paper frame intact while content scrolls beneath. */
+  /* Bars sit in the fixed reader body; only .reader-scroll scrolls (see html.reader in global.css). */
   .reader-bar {
-    position: fixed;
-    z-index: 10;
-    inset-inline: 0;
-    padding-inline: 0.25rem;
-    background: var(--canvas);
+    flex: none;
+    position: relative;
+    z-index: 1;
+    background: rgb(251 250 247 / 0.86);
   }
 
   .reader-top {
-    top: 0;
-    padding-top: 0.25rem;
+    border-bottom: 1px solid var(--rule);
   }
 
   .reader-bottom {
-    bottom: 0;
-    padding-bottom: 0.25rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .reader-scroll {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    scroll-padding-block: 1.5rem;
   }
 
   .reader-inner {
@@ -141,23 +143,14 @@ const minutes = Math.ceil(stats.minutes);
     align-items: baseline;
     gap: 1rem;
     padding: 0.85rem 1.5rem;
-    border: 1px solid var(--frame-line);
-    background: var(--paper);
     color: var(--muted);
     font-size: 0.76rem;
     line-height: 1.3;
   }
 
-  .reader-top .reader-inner {
-    border-bottom-color: var(--rule);
-    border-radius: 0.65rem 0.65rem 0 0;
-  }
-
   .reader-bottom .reader-inner {
     justify-content: center;
     padding-block: 0.6rem;
-    border-top-color: var(--rule);
-    border-radius: 0 0 0.65rem 0.65rem;
   }
 
   .back-link {
@@ -217,7 +210,7 @@ const minutes = Math.ceil(stats.minutes);
   article {
     width: min(100% - 3rem, var(--measure));
     margin: 0 auto;
-    padding: 7rem 0 2.5rem;
+    padding: 4rem 0 2.5rem;
   }
 
   .article-header {
@@ -314,7 +307,7 @@ const minutes = Math.ceil(stats.minutes);
     margin-left: 0;
     padding-left: 1.25em;
     border-left: 2px solid var(--accent);
-    color: #514e47;
+    color: #4f4d5c;
     font-style: italic;
   }
 
@@ -345,7 +338,7 @@ const minutes = Math.ceil(stats.minutes);
     padding: 1.25rem 1.35rem;
     border: 1px solid var(--rule);
     border-radius: 3px;
-    background: #f0ede5 !important;
+    background: #f4f3fb !important;
     font-size: 0.78rem;
     line-height: 1.6;
   }
@@ -379,7 +372,7 @@ const minutes = Math.ceil(stats.minutes);
   @media (max-width: 36rem) {
     article {
       width: min(100% - 2.5rem, var(--measure));
-      padding-top: 5.5rem;
+      padding-top: 2.75rem;
     }
 
     .article-header {
