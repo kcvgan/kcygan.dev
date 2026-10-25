@@ -5,12 +5,14 @@ export interface Props {
   title: string;
   description?: string;
   image?: string;
+  reader?: boolean;
 }
 
 const {
   title,
   description = 'Kacper Cygan’s personal website. Thoughts on work, books, and life.',
   image,
+  reader = false,
 } = Astro.props;
 
 const pageTitle = title === 'Home' ? 'Kacper Cygan' : `${title} | Kacper Cygan`;
@@ -47,24 +49,26 @@ const pathname = Astro.url.pathname;
   <body>
     <a class="skip-link" href="#content">Skip to content</a>
 
-    <header class="site-header">
-      <div class="site-shell">
-        <a class="site-name" href="/" aria-label="Kacper Cygan, home">
-          <span class="site-name-text">Kacper Cygan</span>
-        </a>
-        <nav aria-label="Primary navigation">
-          <a href="/about" aria-current={pathname === '/about' ? 'page' : undefined}>
-            About
+    {!reader && (
+      <header class="site-header">
+        <div class="site-shell">
+          <a class="site-name" href="/" aria-label="Kacper Cygan, home">
+            <span class="site-name-text">Kacper Cygan</span>
           </a>
-          <a href="/blog" aria-current={pathname.startsWith('/blog') ? 'page' : undefined}>
-            Writing
-          </a>
-          <a href="/books" aria-current={pathname.startsWith('/books') ? 'page' : undefined}>
-            Reading
-          </a>
-        </nav>
-      </div>
-    </header>
+          <nav aria-label="Primary navigation">
+            <a href="/about" aria-current={pathname === '/about' ? 'page' : undefined}>
+              About
+            </a>
+            <a href="/blog" aria-current={pathname.startsWith('/blog') ? 'page' : undefined}>
+              Writing
+            </a>
+            <a href="/books" aria-current={pathname.startsWith('/books') ? 'page' : undefined}>
+              Reading
+            </a>
+          </nav>
+        </div>
+      </header>
+    )}
 
     <main id="content">
       <slot />
