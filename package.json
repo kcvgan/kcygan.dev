@@ -14,7 +14,7 @@
     "sync:books": "node scripts/sync-goodreads.mjs"
   },
   "dependencies": {
-    "astro": "^7.2.4",
+    "astro": "^7.3.3",
     "reading-time": "^1.5.0"
   },
   "devDependencies": {
